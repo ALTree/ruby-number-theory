@@ -1,8 +1,8 @@
-require_relative 'utils'
 require 'prime'
+
 module Primes
 
-	def self.prime? (n)
+	def self.is_prime (n)
 		unless n.class.superclass == Integer
 			raise ArgumentError
 		end
@@ -63,34 +63,8 @@ module Primes
 		end
 	end
 
-	def self.primerange(low = 1, high)
-		return [] if low > high
-		arr = Array.new(high + 1, true)
-		2.upto(high ** 0.5) do |i|
-			if arr[i]
-				j = i*i
-				while j <= high
-					arr[j] = false
-					j += i
-				end
-			end
-		end
-		primes = []
-		arr.each_with_index {|b,i| primes << i if b}
-		start = primes.find_index {|n| n > low}
-		return primes[start..-1]
-	end
-
-	def self.primepi(n)
-		if n < 2
-			return 0
-		else
-			return Primes::primerange(n).size
-		end
-	end
 
 end
 
-count1 = 0
-time1 = Utils::Timing::time_once {Primes::primerange(10000000).each {|n| count1 += 1}}
-puts "#{count1} primes sieved in #{time1} seconds"
+
+
