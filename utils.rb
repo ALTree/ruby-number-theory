@@ -33,7 +33,7 @@ module Utils
 			return res
 		end
 
-		def self.high_pow_divisor (n, d)
+		def self.multiplicity (n, d)
 			if n % d != 0
 				return 0
 			else

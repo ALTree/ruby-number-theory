@@ -10,10 +10,10 @@ class TestUtils < Test::Unit::TestCase
 	end
 
 	def test_high_pow_divisor
-		assert_equal(Utils::Math::high_pow_divisor(18, 2), 1)
-		assert_equal(Utils::Math::high_pow_divisor(34992, 3), 7)
-		assert_equal(Utils::Math::high_pow_divisor(34992, 3), 7)
-		assert_equal(Utils::Math::high_pow_divisor(8152454278732958496, 19), 11)
+		assert_equal(Utils::Math::multiplicity(18, 2), 1)
+		assert_equal(Utils::Math::multiplicity(34992, 3), 7)
+		assert_equal(Utils::Math::multiplicity(34992, 3), 7)
+		assert_equal(Utils::Math::multiplicity(8152454278732958496, 19), 11)
 	end
 
 end

@@ -47,4 +47,12 @@ class TestPrimes < Test::Unit::TestCase
 		assert_equal(Primes::primepi(10**6), 78498)
 	end
 
+	def test_factor
+		assert_equal(Primes::factor(10), {2=>1, 5=>1})
+		assert_equal(Primes::factor(10125000), {2=>3, 3=>4, 5=>6})
+		assert_equal(Primes::factor(10125001), {10125001=>1})
+		assert_equal(Primes::factor(79103835773176077140539788299), {3267000013=>1, 4093082899=>1, 5915587277=>1})
+		assert_equal(Primes::factor(323424426232167763068694468589), {5915587277=>1, 54673257461630679457=>1})
+	end
+
 end

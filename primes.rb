@@ -30,11 +30,8 @@ module
 	end
 
 	def self.witness (a, n)
-		# set n - 1 = 2^t * u 
-		t = Utils::Math::high_pow_divisor(n-1, 2)
+		t = Utils::Math::multiplicity(n-1, 2)
 		u = (n-1)/(2**t)
-		# check if a is witness for non-primality of n
-		# using fermat theorem
 		x1 = Utils::Math::mod_exp(a, u, n)
 		t.times do |i|
 			x0 = x1
@@ -134,32 +131,79 @@ module
 		end
 	end
 
-	def self.factor(n)
-		return {n=>1} if self.prime?(n)
+	def self.factor(n, limit = 1)
 
-		return self.small_factors(n, 10000)
+		return {n => 1} if self.prime?(n)
 
-		# TODO: pollard rho
+		if limit > 1
+			factors, m = self.small_factors(n, limit)
+			return factors if m == 1
+			return factors.merge({m => 1})
+		else
+
+			factors, m = self.small_factors(n, 10000)
+
+			return factors if m == 1
+			return factors.merge({m => 1}) if self.prime?(m)
+
+			count = 1
+			while m > 1
+				div = self.pollard_rho(m, count * 3)
+				if div
+					if self.prime?(div)
+						fac = {div => 1}
+					else
+						fac = self.factor(div)
+					end
+					factors.merge!(fac) {|k,v1,v2| v1+v2}
+					m /= div
+					return factors.merge({m => 1}) if self.prime?(m)
+				end
+				count += 1
+			end
+
+			return factors
+		end
 
 	end
+
 
 	def self.small_factors(n, lim)
 		factors = {}
 		primes = self.primerange(lim)
 		for p in primes
 			if n % p == 0
-				t = Utils::Math::high_pow_divisor(n, p)
+				t = Utils::Math::multiplicity(n, p)
 				factors[p] = t
 				n /= p**t
-				if self.prime?(n)
-					factors[n] = 1
-					return factors
-				end
 			end
 		end
-		factors[n] = 1 if n > 1
-		return factors
+		return factors, n
 	end
+
+	def self.pollard_rho (n, retries = 5)
+		v = 2
+		a = -1
+		retries.times do
+			u = v
+			f = lambda {|x| (x*x + a) % n}
+			j = 0
+			while true
+				j += 1
+				u = f.call(u)
+				v = f.call(f.call(v))
+				g = n.gcd(u - v)
+				next if g == 1
+				break if g == n
+				return g
+			end
+			v = rand(n-1)
+			a = 1 + rand(n-4) 
+		end
+		return nil
+	end
+
+	
 
 end
 
