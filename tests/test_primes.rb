@@ -3,20 +3,20 @@ require_relative  '../primes'
 
 class TestPrimes < Test::Unit::TestCase
 
-	def test_trial_division
-		assert(!Primes::trial_division(1))
-		assert(Primes::trial_division(2))
-		assert(!Primes::trial_division(24680))
-		assert(Primes::trial_division(982451653))
-		assert(Primes::trial_division(1882341361))
+	def test__trial_division
+		assert(!Primes::_trial_division(1))
+		assert(Primes::_trial_division(2))
+		assert(!Primes::_trial_division(24680))
+		assert(Primes::_trial_division(982451653))
+		assert(Primes::_trial_division(1882341361))
 	end
 
-	def test_miller_rabin
-		assert(!Primes::trial_division(24680))
-		assert(Primes::miller_rabin(982451653))
-		assert(Primes::miller_rabin(1882341361))
-		assert(Primes::miller_rabin(9007199254740881))
-		assert(Primes::miller_rabin(9007199254740881))
+	def test__miller_rabin
+		assert(!Primes::_miller_rabin(24680))
+		assert(Primes::_miller_rabin(982451653))
+		assert(Primes::_miller_rabin(1882341361))
+		assert(Primes::_miller_rabin(9007199254740881))
+		assert(Primes::_miller_rabin(9007199254740881))
 	end
 
 	def test_prime?
@@ -34,11 +34,11 @@ class TestPrimes < Test::Unit::TestCase
 		assert(Primes::prime?(2367495770217142995264827948666809233066409497699870112003149352380375124855230068487109373226251983))
 	end
 
-	def test_primerange
-		assert_equal(Primes::primerange(10), [2, 3, 5, 7])
-		assert_equal(Primes::primerange(10, 30), [11, 13, 17, 19, 23, 29])
-		assert_equal(Primes::primerange(1000,10000).size, 1229 - 168)
-		assert_equal(Primes::primerange(100000).size, 9592)
+	def test_primes_list
+		assert_equal(Primes::Sieve.primes_list(10), [2, 3, 5, 7])
+		assert_equal(Primes::Sieve.primes_list(10, 30), [11, 13, 17, 19, 23, 29])
+		assert_equal(Primes::Sieve.primes_list(1000,10000).size, 1229 - 168)
+		assert_equal(Primes::Sieve.primes_list(100000).size, 9592)
 	end
 
 	def test_primepi
@@ -54,5 +54,30 @@ class TestPrimes < Test::Unit::TestCase
 		assert_equal(Primes::factor(79103835773176077140539788299), {3267000013=>1, 4093082899=>1, 5915587277=>1})
 		assert_equal(Primes::factor(323424426232167763068694468589), {5915587277=>1, 54673257461630679457=>1})
 	end
+
+	def test_nextprime
+		assert_equal(Primes::nextprime(5), 7)
+		assert_equal(Primes::nextprime(98765432100), 98765432137)
+		assert_equal(Primes::nextprime(9876543210000000000), 9876543210000000029)
+	end
+
+	def test_prevprime
+		assert_equal(Primes::prevprime(1234567890), 1234567811)
+		assert_equal(Primes::prevprime(1234567890000000000), 1234567889999999953)
+	end
+
+	def test_nthprime
+		assert_equal(Primes::Sieve.nthprime(10), 29)
+		assert_equal(Primes::Sieve.nthprime(1000), 7919)
+		assert_equal(Primes::Sieve.nthprime(10000), 104729)
+	end
+
+	def test_primorial
+		assert_equal(Primes::primorial(5), 2310)
+		assert_equal(Primes::primorial(17), 1922760350154212639070)
+		assert_equal(Primes::primorial(25), 2305567963945518424753102147331756070)
+	end
+
+
 
 end

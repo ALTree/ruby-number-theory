@@ -9,11 +9,5 @@ class TestUtils < Test::Unit::TestCase
 		assert_equal(Utils::Math::mod_exp(54321, 98765, 2147483647), 252276857)
 	end
 
-	def test_high_pow_divisor
-		assert_equal(Utils::Math::multiplicity(18, 2), 1)
-		assert_equal(Utils::Math::multiplicity(34992, 3), 7)
-		assert_equal(Utils::Math::multiplicity(34992, 3), 7)
-		assert_equal(Utils::Math::multiplicity(8152454278732958496, 19), 11)
-	end
 
 end

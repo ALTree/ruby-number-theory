@@ -1,21 +1,18 @@
 require_relative 'utils'
-module
- Primes
+require_relative 'divisors'
+
+module Primes
 
 	def self.prime? (n)
-		unless n.class.superclass == Integer
-			raise ArgumentError
-		end
-
 		if n < 10**9 or n % 2 == 0
-			return self.trial_division(n)
+			return self._trial_division(n)
 		else
-			return self.miller_rabin(n)
+			return self._miller_rabin(n)
 		end
 	end
 
-	def self.trial_division (n)
-		return false if n <= 1 or n == 4
+	def self._trial_division (n)
+		return false if n < 2 or n == 4
 		return true if n == 2 or n == 3 or n == 5
 
 		mods30 = [1, 7, 11, 13, 17, 19, 23, 29] 
@@ -29,8 +26,8 @@ module
 		return true
 	end
 
-	def self.witness (a, n)
-		t = Utils::Math::multiplicity(n-1, 2)
+	def self._witness (a, n)
+		t = Divisors::multiplicity(n-1, 2)
 		u = (n-1)/(2**t)
 		x1 = Utils::Math::mod_exp(a, u, n)
 		t.times do |i|
@@ -44,26 +41,113 @@ module
 		return false
 	end
 	  
-	def self.miller_rabin (n, runs = 48)
+	def self._miller_rabin (n, runs = 50)
 		if n < 341550071728321
 			for a in [2, 3, 5, 7, 11, 13, 17] do
-				return false if self.witness(a, n)
+				return false if self._witness(a, n)
 			end
 			return true
 		else
 			runs.times do
 				a = 1 + Random.rand(n)
-				if self.witness(a, n)
-					return false
-				end
+				return false if self._witness(a, n)
 			end
 			return true
 		end
 	end
 
-	# def self.primerange(low = 1, high)
+	class Sieve
+
+		@primes = [2,3,5,7,11]
+		@limit = 11
+
+		def self.primes_list (low = 1, high)
+			low = low.to_i
+			high = high.to_i
+			if high > @limit
+				Sieve.extend(high)
+				@limit = high
+			end
+			l = @primes.index {|n| n >= low}
+			h = @primes.rindex {|n| n <= high}
+			return @primes[l..h]
+		end
+
+		def self.nthprime (n)
+			if @primes[n] == nil
+				high = n*(Math.log(n) + Math.log(Math.log(n))).to_i
+				Sieve.extend(high)
+				@limit = high
+			end
+			return @primes[n-1]
+		end
+
+		def self.get_limit
+			return @limit
+		end
+
+		def self.extend (high)
+			# alternativa:
+			# @primes = @primes + Primes::primerange(@limit + 1, high)
+			@primes = @primes + Primes::_sieveprimes(@limit + 1, high)
+		end
+
+	end
+
+
+	def self._sieveprimes (low, high)
+		sqrt = (high**0.5).ceil
+		primes_up_sqrt = []
+		
+		if Sieve.get_limit <= sqrt
+			arr = Array.new(sqrt + 1, true)
+			arr[0] = false
+			arr[1] = false
+			2.upto(sqrt) do |i|
+				if arr[i]
+					j = i*i
+					while j <= high
+						arr[j] = false
+						j += i
+					end
+				end
+			end
+			arr.each_with_index {|b,i| primes_up_sqrt << i if b}
+			start = primes_up_sqrt.index {|n| n > low}
+			primes = primes_up_sqrt[start..-1]
+		else
+			primes_up_sqrt = Sieve.primes_list(sqrt)
+			primes = []
+		end
+
+		arr = Array.new(high - low + 1, true)
+		for p in primes_up_sqrt
+			j = p - (low-1) % p - 1
+			while j <= high
+				arr[j] = false
+				j += p
+			end
+		end
+
+		arr.each_with_index {|b,i| primes << i+low if b}
+		return primes
+	end
+
+	# def self._primerange (low = 1, high)
 	# 	return [] if low > high
+
+	# 	if low < high**0.5
+	# 		res = self._full_sieve(high)
+	# 		return res[res.find_index {|n| n >= low} .. -1]
+	# 	else
+	# 		return self._segmented_sieve(low, high)
+	# 	end
+	# end
+
+	# def self._full_sieve (high)
 	# 	arr = Array.new(high + 1, true)
+	# 	arr[0] = false
+	# 	arr[1] = false
 	# 	2.upto(high ** 0.5) do |i|
 	# 		if arr[i]
 	# 			j = i*i
@@ -75,80 +159,48 @@ module
 	# 	end
 	# 	primes = []
 	# 	arr.each_with_index {|b,i| primes << i if b}
-	# 	start = primes.find_index {|n| n >= low}
-	# 	return primes[start..-1]
+	# 	return primes
 	# end
 
-	def self.primerange(low = 1, high)
-		return [] if low > high
+	# def self._segmented_sieve(low, high)
+	# 	arr = Array.new(high - low + 1, true)
+	# 	primes = Primes::_primerange((high**0.5))
+	# 	for p in primes
+	# 		j = p - (low-1) % p - 1
+	# 		while j <= high
+	# 			arr[j] = false
+	# 			j += p
+	# 		end
+	# 	end
+	# 	primes = []
+	# 	arr.each_with_index {|b,i| primes << i+low if b}
+	# 	return primes
+	# end
 
-		if low < high**0.5
-			res = self.full_sieve(high)
-			return res[res.find_index {|n| n >= low} .. -1]
-		else
-			return self.segmented_sieve(low, high)
-		end
-	end
-
-	def self.full_sieve(high)
-		arr = Array.new(high + 1, true)
-		arr[0] = false
-		arr[1] = false
-		2.upto(high ** 0.5) do |i|
-			if arr[i]
-				j = i*i
-				while j <= high
-					arr[j] = false
-					j += i
-				end
-			end
-		end
-		primes = []
-		arr.each_with_index {|b,i| primes << i if b}
-		return primes
-	end
-
-	def self.segmented_sieve(low, high)
-		arr = Array.new(high - low + 1, true)
-		primes = Primes::primerange((high**0.5).to_i)
-		for p in primes
-			j = p - (low-1) % p - 1
-			while j <= high
-				arr[j] = false
-				j += p
-			end
-		end
-		primes = []
-		arr.each_with_index {|b,i| primes << i+low if b}
-		return primes
-	end
 
 	def self.primepi(n)
-		if n < 2
-			return 0
-		else
-			return Primes::primerange(n).size
-		end
+		return 0 if n < 2
+		return Primes::Sieve.primes_list(n).size
 	end
 
-	def self.factor(n, limit = 1)
 
+	def self.factor(n, limit = 1)
+		return nil if n < 1
+		return {1 => 1} if n == 1
 		return {n => 1} if self.prime?(n)
 
 		if limit > 1
-			factors, m = self.small_factors(n, limit)
+			factors, m = self._small_factors(n, limit)
 			return factors if m == 1
 			return factors.merge({m => 1})
 		else
-
-			factors, m = self.small_factors(n, 10000)
-
+			factors, m = self._small_factors(n, 10000)
 			return factors if m == 1
 			return factors.merge({m => 1}) if self.prime?(m)
 
 			count = 1
 			while m > 1
-				div = self.pollard_rho(m, count * 3)
+				div = self._pollard_rho(m, count * 3)
 				if div
 					if self.prime?(div)
 						fac = {div => 1}
@@ -161,19 +213,16 @@ module
 				end
 				count += 1
 			end
-
 			return factors
 		end
-
 	end
 
-
-	def self.small_factors(n, lim)
+	def self._small_factors(n, lim)
 		factors = {}
-		primes = self.primerange(lim)
+		primes = Primes::Sieve.primes_list(lim)
 		for p in primes
 			if n % p == 0
-				t = Utils::Math::multiplicity(n, p)
+				t = Divisors::multiplicity(n, p)
 				factors[p] = t
 				n /= p**t
 			end
@@ -181,7 +230,7 @@ module
 		return factors, n
 	end
 
-	def self.pollard_rho (n, retries = 5)
+	def self._pollard_rho (n, retries = 5)
 		v = 2
 		a = -1
 		retries.times do
@@ -203,7 +252,52 @@ module
 		return nil
 	end
 
-	
+
+	def self.nextprime (n)
+		if n < 10007
+			return Primes::Sieve.primes_list(10007).find {|x| x > n}
+		else
+			p = n+1
+			p += 1 while p % 6 != 1 and p % 6 != 5
+			flip = (p % 6 == 1 ? 4 : 2)
+			while not self.prime?(p)
+				p += flip
+				flip = 6 - flip 
+			end
+			return p
+		end
+	end
+
+
+	def self.prevprime (n)
+		return nil if n < 3
+		p = n-1
+		p -= 1 while p % 6 != 1 and p % 6 != 5
+		flip = (p % 6 == 1 ? 2 : 4)
+		while not self.prime?(p)
+			p -= flip
+			flip = 6 - flip 
+		end
+		return p
+	end
+
+
+	def self.randprime(low = 1, high)
+		p = self.nextprime(low + rand(high+1))
+		p = self.prevprime(p) if p > high
+		return nil if p < low
+		return p
+	end
+
+	def self.primorial(n)
+		return nil if n < 0
+		return [2,6,30,210,2310][n-1] if n < 7
+
+		upp = n * (Math.log(n) + Math.log(Math.log(n)))
+		primes = Sieve.primes_list(upp)[0..n-1]
+		return primes.inject {|a,b| a*b}
+	end
+
 
 end
 

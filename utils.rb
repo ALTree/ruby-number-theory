@@ -32,22 +32,6 @@ module Utils
 			end
 			return res
 		end
-
-		def self.multiplicity (n, d)
-			if n % d != 0
-				return 0
-			else
-				m = n
-				res = 0
-				while m % d == 0
-					m /= d
-					res += 1
-				end
-				return res
-			end
-		end
-
-
 	end
 
 end
