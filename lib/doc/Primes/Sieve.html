@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+
+<title>class Primes::Sieve - RDoc Documentation</title>
+
+<link type="text/css" media="screen" href="../rdoc.css" rel="stylesheet">
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../";
+</script>
+
+<script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/navigation.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/search_index.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/search.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/searcher.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/darkfish.js"></script>
+
+
+<body id="top" class="class">
+<nav id="metadata">
+  <nav id="home-section" class="section">
+  <h3 class="section-header">
+    <a href="../index.html">Home</a>
+    <a href="../table_of_contents.html#classes">Classes</a>
+    <a href="../table_of_contents.html#methods">Methods</a>
+  </h3>
+</nav>
+
+
+  <nav id="search-section" class="section project-section" class="initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <h3 class="section-header">
+      <input type="text" name="search" placeholder="Search" id="search-field"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </h3>
+  </form>
+
+  <ul id="search-results" class="initially-hidden"></ul>
+</nav>
+
+
+  <div id="file-metadata">
+    <nav id="file-list-section" class="section">
+  <h3 class="section-header">Defined In</h3>
+  <ul>
+    <li>primes.rb
+  </ul>
+</nav>
+
+    
+  </div>
+
+  <div id="class-metadata">
+    
+    <nav id="parent-class-section" class="section">
+  <h3 class="section-header">Parent</h3>
+  
+  <p class="link">Object
+  
+</nav>
+
+    
+    <!-- Method Quickref -->
+<nav id="method-list-section" class="section">
+  <h3 class="section-header">Methods</h3>
+
+  <ul class="link-list">
+    
+    <li><a href="#method-c-extend">::extend</a>
+    
+    <li><a href="#method-c-get_limit">::get_limit</a>
+    
+    <li><a href="#method-c-nthprime">::nthprime</a>
+    
+    <li><a href="#method-c-primes_list">::primes_list</a>
+    
+  </ul>
+</nav>
+
+  </div>
+
+  <div id="project-metadata">
+    
+    <nav id="classindex-section" class="section project-section">
+  <h3 class="section-header">Class and Module Index</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="../Utils.html">Utils</a>
+  
+    <li><a href="../Primes.html">Primes</a>
+  
+    <li><a href="../Primes/Sieve.html">Primes::Sieve</a>
+  
+    <li><a href="../Divisors.html">Divisors</a>
+  
+  </ul>
+</nav>
+
+  </div>
+</nav>
+
+<div id="documentation">
+  <h1 class="class">class Primes::Sieve</h1>
+
+  <div id="description" class="description">
+    
+<p>Class containing a list of all prime numbers up to a  certain limit. All
+the methods that require such a list for a computation query the class
+using its accessors methods. The list is dynamically extended when needed.</p>
+
+  </div><!-- description -->
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    <!-- Methods -->
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Class Methods</h3>
+
+    
+      <div id="method-c-extend" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">extend</span><span
+            class="method-args">(high)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Extends the primes list to contain all the prime numbers up to
+<code>high</code></p>
+          
+
+          
+          <div class="method-source-code" id="extend-source">
+            <pre><span class="ruby-comment"># File primes.rb, line 147</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">extend</span> (<span class="ruby-identifier">high</span>)
+        <span class="ruby-comment"># @primes = @primes + Primes::primerange(@limit + 1, high)</span>
+        <span class="ruby-ivar">@primes</span> = <span class="ruby-ivar">@primes</span> <span class="ruby-operator">+</span> <span class="ruby-constant">Primes</span><span class="ruby-operator">::</span><span class="ruby-identifier">_sieveprimes</span>(<span class="ruby-ivar">@limit</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span>, <span class="ruby-identifier">high</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- extend-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- extend-method -->
+
+    
+      <div id="method-c-get_limit" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">get_limit</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns the current upper limit on the primes list.</p>
+          
+
+          
+          <div class="method-source-code" id="get_limit-source">
+            <pre><span class="ruby-comment"># File primes.rb, line 139</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">get_limit</span>
+        <span class="ruby-keyword">return</span> <span class="ruby-ivar">@limit</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- get_limit-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- get_limit-method -->
+
+    
+      <div id="method-c-nthprime" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">nthprime</span><span
+            class="method-args">(n)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns the <code>n</code>-th prime number.</p>
+
+<h2 id="method-c-nthprime-label-Example">Example</h2>
+
+<pre class="ruby"><span class="ruby-operator">&gt;&gt;</span> <span class="ruby-constant">Primes</span><span class="ruby-operator">::</span><span class="ruby-constant">Sieve</span>.<span class="ruby-identifier">nthprime</span>(<span class="ruby-value">5</span>)
+=<span class="ruby-operator">&gt;</span> <span class="ruby-value">11</span>
+
+<span class="ruby-operator">&gt;&gt;</span> <span class="ruby-constant">Primes</span><span class="ruby-operator">::</span><span class="ruby-constant">Sieve</span>.<span class="ruby-identifier">nthprime</span>(<span class="ruby-value">500</span>)
+=<span class="ruby-operator">&gt;</span> <span class="ruby-value">3571</span>
+</pre>
+          
+
+          
+          <div class="method-source-code" id="nthprime-source">
+            <pre><span class="ruby-comment"># File primes.rb, line 127</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">nthprime</span> (<span class="ruby-identifier">n</span>)
+        <span class="ruby-keyword">if</span> <span class="ruby-ivar">@primes</span>[<span class="ruby-identifier">n</span>] <span class="ruby-operator">==</span> <span class="ruby-keyword">nil</span>
+                <span class="ruby-identifier">high</span> = <span class="ruby-identifier">n</span>*(<span class="ruby-constant">Math</span>.<span class="ruby-identifier">log</span>(<span class="ruby-identifier">n</span>) <span class="ruby-operator">+</span> <span class="ruby-constant">Math</span>.<span class="ruby-identifier">log</span>(<span class="ruby-constant">Math</span>.<span class="ruby-identifier">log</span>(<span class="ruby-identifier">n</span>))).<span class="ruby-identifier">to_i</span>
+                <span class="ruby-constant">Sieve</span>.<span class="ruby-identifier">extend</span>(<span class="ruby-identifier">high</span>)
+                <span class="ruby-ivar">@limit</span> = <span class="ruby-identifier">high</span>
+        <span class="ruby-keyword">end</span>
+        <span class="ruby-keyword">return</span> <span class="ruby-ivar">@primes</span>[<span class="ruby-identifier">n</span><span class="ruby-operator">-</span><span class="ruby-value">1</span>]
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- nthprime-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- nthprime-method -->
+
+    
+      <div id="method-c-primes_list" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">primes_list</span><span
+            class="method-args">(low = 1, high)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Returns a list with all the prime numbers between <code>low</code> and
+<code>high</code>.</p>
+
+<h2 id="method-c-primes_list-label-Example">Example</h2>
+
+<pre class="ruby"><span class="ruby-operator">&gt;&gt;</span> <span class="ruby-constant">Primes</span><span class="ruby-operator">::</span><span class="ruby-constant">Sieve</span>.<span class="ruby-identifier">primes_list</span>(<span class="ruby-value">20</span>)
+=<span class="ruby-operator">&gt;</span> [<span class="ruby-value">2</span>, <span class="ruby-value">3</span>, <span class="ruby-value">5</span>, <span class="ruby-value">7</span>, <span class="ruby-value">11</span>, <span class="ruby-value">13</span>, <span class="ruby-value">17</span>, <span class="ruby-value">19</span>]
+
+<span class="ruby-operator">&gt;&gt;</span> <span class="ruby-constant">Primes</span><span class="ruby-operator">::</span><span class="ruby-constant">Sieve</span>.<span class="ruby-identifier">primes_list</span>(<span class="ruby-value">1000</span>, <span class="ruby-value">1020</span>)
+=<span class="ruby-operator">&gt;</span> [<span class="ruby-value">1009</span>, <span class="ruby-value">1013</span>, <span class="ruby-value">1019</span>]
+</pre>
+          
+
+          
+          <div class="method-source-code" id="primes_list-source">
+            <pre><span class="ruby-comment"># File primes.rb, line 105</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">primes_list</span> (<span class="ruby-identifier">low</span> = <span class="ruby-value">1</span>, <span class="ruby-identifier">high</span>)
+        <span class="ruby-identifier">low</span> = <span class="ruby-identifier">low</span>.<span class="ruby-identifier">to_i</span>
+        <span class="ruby-identifier">high</span> = <span class="ruby-identifier">high</span>.<span class="ruby-identifier">to_i</span>
+        <span class="ruby-keyword">if</span> <span class="ruby-identifier">high</span> <span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@limit</span>
+                <span class="ruby-constant">Sieve</span>.<span class="ruby-identifier">extend</span>(<span class="ruby-identifier">high</span>)
+                <span class="ruby-ivar">@limit</span> = <span class="ruby-identifier">high</span>
+        <span class="ruby-keyword">end</span>
+        <span class="ruby-identifier">l</span> = <span class="ruby-ivar">@primes</span>.<span class="ruby-identifier">index</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">n</span><span class="ruby-operator">|</span> <span class="ruby-identifier">n</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-identifier">low</span>}
+        <span class="ruby-identifier">h</span> = <span class="ruby-ivar">@primes</span>.<span class="ruby-identifier">rindex</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">n</span><span class="ruby-operator">|</span> <span class="ruby-identifier">n</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-identifier">high</span>}
+        <span class="ruby-keyword">return</span> <span class="ruby-ivar">@primes</span>[<span class="ruby-identifier">l</span><span class="ruby-operator">..</span><span class="ruby-identifier">h</span>]
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- primes_list-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- primes_list-method -->
+
+    
+    </section><!-- public-class-method-details -->
+  
+  </section><!-- 5Buntitled-5D -->
+
+</div><!-- documentation -->
+
+
+<footer id="validator-badges">
+  <p><a href="http://validator.w3.org/check/referer">[Validate]</a>
+  <p>Generated by <a href="https://github.com/rdoc/rdoc">RDoc</a> 3.12.1.
+  <p>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish Rdoc Generator</a> 3.
+</footer>
+

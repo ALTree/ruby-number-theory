@@ -3,6 +3,15 @@ require_relative 'primes'
 
 module Divisors
 
+	##
+	# Returns the greatest integer +k+ such that
+	# <tt>d^k</tt> divides +n+.
+	#
+	# == Example
+	#
+	#  >> Divisors::multiplicity(1000,5)
+	#  => 3
+	#
 	def self.multiplicity (n, d)
 		return 0 if n % d != 0
 		m = n
@@ -14,13 +23,24 @@ module Divisors
 		return res
 	end
 
+	##
+	# Returns the ordered list of the divisors of +n+ (1 and +n+ included).
+	#
+	# == Example
+	#
+	#  >> Divisors::divisors(100)
+	#  => [1, 2, 4, 5, 10, 20, 25, 50, 100]
+	#
 	def self.divisors (n)
 		factors = Primes::factor(n)
 		ps = factors.keys.sort!
 		return self._divisors(0, factors, ps).sort!.uniq
 	end
 
-	def self._divisors (n = 0, factors, ps)
+	##
+	# Helper function for divisors()
+	#
+	def self._divisors (n = 0, factors, ps) # :nodoc:
 		give = []
 		if n == ps.size
 			give << 1
@@ -36,7 +56,14 @@ module Divisors
 		return give
 	end
 
-
+	##
+	# Return sigma_0(+n+), i.e. the number of divisors of +n+.
+	#
+	# == Example
+	#
+	#  >> Divisors::divcount(100)
+	#  => 9
+	#
 	def self.divcount (n)
 		return nil if n < 0
 		return 1 if n == 1
@@ -45,7 +72,15 @@ module Divisors
 		return divcount
 	end
 
-
+	##
+	# Return sigma_k(+n+), i.e. the sum of the +k+-th powers of 
+	# the divisors of +n+.
+	#
+	# == Example
+	#
+	#  >> Divisors::divisor_sigma(10, 2)
+	#  => 130
+	#
 	def self.divisor_sigma (n, k)
 		return self.divcount(n) if k == 0
 		res = 0
@@ -55,10 +90,37 @@ module Divisors
 		return res
 	end
 
+	##
+	# Returns true if +n+ is a perfect number, false otherwise.
+	#
+	# == Example
+	#
+	#  >> Divisors::perfect?(6)
+	#  => true
+	#
 	def self.perfect? (n)
 		return self.divisor_sigma(n, 1) == 2*n
 	end
 
+
+	##
+	# Returns the valuer of phi(+n+), the Euler phi function; i.e.
+	# the number of integers in [1..n] comprime to +n+. 
+	#
+	# == Example
+	#
+	#  >> Divisors::euler_phi(30)
+	#  => 8
+	#
+	#  >> Divisors::euler_phi(37)
+	#  => 36
+	#
+	# == Algorithm
+	#
+	# +n+ is first factored, then the result is computed as
+	# <tt> n * prod_{p} (1 - 1/p) </tt>
+	# where the product spans over all the prime factors of +n+
+	#
 	def self.euler_phi (n)
 		return 0 if n < 1
 		res = n

@@ -1,5 +1,5 @@
 
-module Utils
+module Utils # :nodoc: :all:
 
 	### Timing module ###
 	module Timing	

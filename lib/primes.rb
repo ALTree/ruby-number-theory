@@ -3,6 +3,28 @@ require_relative 'divisors'
 
 module Primes
 
+	##
+	# Returns true if +n+ is (probably) prime, false otherwise.
+	# For +n+ < 10^15 the answer is accurate; greater n values
+	# reported as primes have a (very) small probability of
+	# actually being pseudoprimes.
+	#
+	# == Example
+	#  >> Primes::prime?(12)
+	#  => false
+	#
+	#  >> Primes::prime?(1882341361)
+	#  => true
+	#
+	# == Algorithm
+	# For +n+ < 10^9 the function just test +n+ by trial division;
+	# for greater n values it performs a Miller-Rabin a
+	# pseudoprime test. 
+	#
+	# If +n+ < 341550071728321 the test is deterministic, otherwise
+	# there's a probability smaller than 7 x 10^-31 that a composite
+	# number is reported as prime.
+	#
 	def self.prime? (n)
 		if n < 10**9 or n % 2 == 0
 			return self._trial_division(n)
@@ -11,7 +33,7 @@ module Primes
 		end
 	end
 
-	def self._trial_division (n)
+	def self._trial_division (n) # :nodoc:
 		return false if n < 2 or n == 4
 		return true if n == 2 or n == 3 or n == 5
 
@@ -26,7 +48,7 @@ module Primes
 		return true
 	end
 
-	def self._witness (a, n)
+	def self._witness (a, n) # :nodoc:
 		t = Divisors::multiplicity(n-1, 2)
 		u = (n-1)/(2**t)
 		x1 = Utils::Math::mod_exp(a, u, n)
@@ -41,7 +63,7 @@ module Primes
 		return false
 	end
 	  
-	def self._miller_rabin (n, runs = 50)
+	def self._miller_rabin (n, runs = 50) # :nodoc:
 		if n < 341550071728321
 			for a in [2, 3, 5, 7, 11, 13, 17] do
 				return false if self._witness(a, n)
@@ -56,11 +78,30 @@ module Primes
 		end
 	end
 
+
+	##
+	# Class containing a list of all prime numbers up to a 
+	# certain limit. All the methods that require such a list
+	# for a computation query the class using its accessors methods.
+	# The list is dynamically extended when needed.
+	#
 	class Sieve
 
 		@primes = [2,3,5,7,11]
 		@limit = 11
 
+		##
+		# Returns a list with all the prime numbers between
+		# +low+ and +high+.
+		#
+		# == Example
+		#
+		#  >> Primes::Sieve.primes_list(20)
+		#  => [2, 3, 5, 7, 11, 13, 17, 19]
+		#
+		#  >> Primes::Sieve.primes_list(1000, 1020)
+		#  => [1009, 1013, 1019]
+		#
 		def self.primes_list (low = 1, high)
 			low = low.to_i
 			high = high.to_i
@@ -73,6 +114,16 @@ module Primes
 			return @primes[l..h]
 		end
 
+		##
+		# Returns the +n+-th prime number.
+		#
+		# == Example
+		#  >> Primes::Sieve.nthprime(5)
+		#  => 11
+		#
+		#  >> Primes::Sieve.nthprime(500)
+		#  => 3571
+		#
 		def self.nthprime (n)
 			if @primes[n] == nil
 				high = n*(Math.log(n) + Math.log(Math.log(n))).to_i
@@ -82,10 +133,17 @@ module Primes
 			return @primes[n-1]
 		end
 
+		##
+		# Returns the current upper limit on the primes list.
+		#
 		def self.get_limit
 			return @limit
 		end
 
+		##
+		# Extends the primes list to contain all the prime numbers up to
+		# +high+
+		#
 		def self.extend (high)
 			# @primes = @primes + Primes::primerange(@limit + 1, high)
 			@primes = @primes + Primes::_sieveprimes(@limit + 1, high)
@@ -94,7 +152,7 @@ module Primes
 	end
 
 
-	def self._sieveprimes (low, high)
+	def self._sieveprimes (low, high) # :nodoc:
 		sqrt = (high**0.5).ceil
 		primes_up_sqrt = []
 		
@@ -177,12 +235,46 @@ module Primes
 	# end
 
 
+	##
+	# Returns the value of primepi(+n+), i.e. the number
+	# of primes smaller than +n+
+	#
+	# == Example
+	#
+	#  >> Primes::primepi(100000)
+	#  => 9592
+	#
 	def self.primepi(n)
 		return 0 if n < 2
 		return Primes::Sieve.primes_list(n).size
 	end
 
 
+	##
+	# Factors +n+ and returns an hash containing the prime
+	# factors of +n+ as keys and their respective multiplicities
+	# as values. If +limit+ is passed, no factors greater
+	# than +limit+ are searched, and some of the keys could be
+	# composite.
+	#
+	# == Example
+	#
+	#  >> Primes::factor(1690)
+	#  => {2=>1, 5=>1, 13=>2}
+	#
+	#  >> Primes::factor(1690, 10)
+	#  => {2=>1, 5=>1, 169=>1}
+	#
+	#  >> Primes::factor(79103835773176077140539788299)
+	#  => {3267000013=>1, 4093082899=>1, 5915587277=>1}
+	#
+	# == Algorithm
+	#
+	# The procedure first searches for small factors of +n+
+	# in the primes list provided by the +Sieve+ class 
+	# Then, if needed, the procedure switches to Pollard's Rho method
+	# and searches for other factors until +n+ is fully factorized.
+	#
 	def self.factor(n, limit = 1)
 		return nil if n < 1
 		return {1 => 1} if n == 1
@@ -216,7 +308,7 @@ module Primes
 		end
 	end
 
-	def self._small_factors(n, lim)
+	def self._small_factors(n, lim) # :nodoc:
 		factors = {}
 		primes = Primes::Sieve.primes_list(lim)
 		for p in primes
@@ -229,7 +321,7 @@ module Primes
 		return factors, n
 	end
 
-	def self._pollard_rho (n, retries = 5)
+	def self._pollard_rho (n, retries = 5) # :nodoc:
 		v = 2
 		a = -1
 		retries.times do
@@ -251,7 +343,13 @@ module Primes
 		return nil
 	end
 
-
+	##
+	# Returns the smallest prime number greater than +n+.
+	#
+	# == Example
+	#  >> Primes::nextprime(1000)
+	#  => 1009
+	#
 	def self.nextprime (n)
 		if n < 10007
 			return Primes::Sieve.primes_list(10007).find {|x| x > n}
@@ -267,7 +365,13 @@ module Primes
 		end
 	end
 
-
+	##
+	# Returns the greatest prime number smaller than +n+.
+	#
+	# == Example
+	#  >> Primes::prevprime(1000)
+	#  => 997
+	#
 	def self.prevprime (n)
 		return nil if n < 3
 		p = n-1
@@ -280,7 +384,18 @@ module Primes
 		return p
 	end
 
-
+	##
+	# Returns a random prime between +low+ and +high+;
+	# and +nil+ if there's not one.
+	#
+	# == Example
+	#
+	#  >> Primes::randprime(1000)
+	#  => 631
+	#
+	#  >> Primes::randprime(10000, 20000)
+	#  => 15569
+	#
 	def self.randprime(low = 1, high)
 		p = self.nextprime(low + rand(high+1))
 		p = self.prevprime(p) if p > high
@@ -288,6 +403,15 @@ module Primes
 		return p
 	end
 
+	##
+	# Return the primorial of +n+, i.e. the product
+	# of the first +n+ prime numbers.
+	#
+	# == Example
+	#
+	#  >> Primes::primorial(10)
+	#  => 6469693230
+	#
 	def self.primorial(n)
 		return nil if n < 0
 		return [2,6,30,210,2310][n-1] if n < 7
