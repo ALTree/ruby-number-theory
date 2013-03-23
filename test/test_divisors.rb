@@ -1,5 +1,5 @@
 require 'test/unit'
-require_relative  '../divisors'
+require_relative  '../lib/divisors'
 
 class TestDivisors < Test::Unit::TestCase
 
@@ -17,7 +17,6 @@ class TestDivisors < Test::Unit::TestCase
 
 	def test_multiplicity
 		assert_equal(Divisors::multiplicity(18, 2), 1)
-		assert_equal(Divisors::multiplicity(34992, 3), 7)
 		assert_equal(Divisors::multiplicity(34992, 3), 7)
 		assert_equal(Divisors::multiplicity(8152454278732958496, 19), 11)
 	end

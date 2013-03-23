@@ -1,5 +1,5 @@
 require 'test/unit'
-require_relative  '../primes'
+require_relative  '../lib/primes'
 
 class TestPrimes < Test::Unit::TestCase
 

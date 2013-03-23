@@ -1,5 +1,5 @@
 require 'test/unit'
-require_relative '../utils'
+require_relative '../lib/utils'
 
 class TestUtils < Test::Unit::TestCase
 

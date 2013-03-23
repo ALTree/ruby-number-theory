@@ -87,7 +87,6 @@ module Primes
 		end
 
 		def self.extend (high)
-			# alternativa:
 			# @primes = @primes + Primes::primerange(@limit + 1, high)
 			@primes = @primes + Primes::_sieveprimes(@limit + 1, high)
 		end
@@ -194,7 +193,7 @@ module Primes
 			return factors if m == 1
 			return factors.merge({m => 1})
 		else
-			factors, m = self._small_factors(n, 10000)
+			factors, m = self._small_factors(n, 4096)
 			return factors if m == 1
 			return factors.merge({m => 1}) if self.prime?(m)
 

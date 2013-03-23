@@ -14,7 +14,6 @@ module Divisors
 		return res
 	end
 
-
 	def self.divisors (n)
 		factors = Primes::factor(n)
 		ps = factors.keys.sort!
@@ -69,7 +68,7 @@ module Divisors
 		end
 		return res
 	end	
-	
+
 
 end
 
