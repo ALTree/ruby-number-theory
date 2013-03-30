@@ -66,7 +66,7 @@ class TestPrimes < Test::Unit::TestCase
 		assert_equal(Primes::prevprime(1234567890000000000), 1234567889999999953)
 	end
 
-	def test_nthprime
+	def test_nthprimes
 		assert_equal(Primes::Sieve.nthprime(10), 29)
 		assert_equal(Primes::Sieve.nthprime(1000), 7919)
 		assert_equal(Primes::Sieve.nthprime(10000), 104729)
