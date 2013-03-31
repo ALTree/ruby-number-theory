@@ -275,40 +275,75 @@ module Primes
 	# Then, if needed, the procedure switches to Pollard's Rho method
 	# and searches for other factors until +n+ is fully factorized.
 	#
-	def self.factor(n, limit = 1)
+	def self.factor(n, opts = {})
+		defaults = {:limit => nil, :use_rho => true, :use_pm1 => true}
+		options = defaults.merge!(opts)
+
+		limit = options[:limit]
+		use_rho = options[:use_rho]
+		use_pm1 = options[:use_pm1]
+
 		return nil if n < 1
 		return {1 => 1} if n == 1
 		return {n => 1} if self.prime?(n)
 
-		if limit > 1
-			factors, m = self._small_factors(n, limit)
+		if limit 
+			factors, m = self._trial(n, limit)
 			return factors if m == 1
 			return factors.merge({m => 1})
 		else
-			factors, m = self._small_factors(n, 4096)
+			factors, m = self._trial(n, 4096)
 			return factors if m == 1
 			return factors.merge({m => 1}) if self.prime?(m)
 
+			if not (use_pm1 or use_rho)
+				return factors.merge({m => 1})
+			end
+			
 			count = 1
 			while m > 1
-				div = self._pollard_rho(m, count * 3)
-				if div
-					if self.prime?(div)
-						fac = {div => 1}
-					else
-						fac = self.factor(div)
+
+				## pollard rho
+				if use_rho
+					retries = count * 2
+					rounds = [10**4, 10**count].max
+					div = self._pollard_rho(m, retries, rounds)
+					if div
+						if self.prime?(div)
+							fac = {div => 1}
+						else
+							fac = self.factor(div)
+						end
+						factors.merge!(fac) {|k,v1,v2| v1 + v2}
+						m /= div
+						return factors.merge({m => 1}) if self.prime?(m)
 					end
-					factors.merge!(fac) {|k,v1,v2| v1 + v2}
-					m /= div
-					return factors.merge({m => 1}) if self.prime?(m)
 				end
+
+				## pollard p - 1
+				if use_pm1
+					bound = [10**4, 10**count].max
+					max_rounds = [6, count*2].max
+					div = self._pollard_pm1(m, bound, max_rounds)
+					if div
+						if self.prime?(div)
+							fac = {div => 1}
+						else
+							fac = self.factor(div)
+						end
+						factors.merge!(fac) {|k,v1,v2| v1 + v2}
+						m /= div
+						return factors.merge({m => 1}) if self.prime?(m)
+					end
+				end
+
 				count += 1
 			end
 			return factors
 		end
 	end
 
-	def self._small_factors(n, lim) # :nodoc:
+	def self._trial(n, lim) # :nodoc:
 		factors = {}
 		primes = Primes::Sieve.primes_list(lim)
 		for p in primes
@@ -321,14 +356,14 @@ module Primes
 		return factors, n
 	end
 
-	def self._pollard_rho (n, retries = 5) # :nodoc:
+	def self._pollard_rho (n, retries = 5, max_rounds = 10**5) # :nodoc:
 		v = 2
 		a = -1
 		retries.times do
 			u = v
 			f = lambda {|x| (x*x + a) % n}
 			j = 0
-			while true
+			while j < max_rounds
 				j += 1
 				u = f.call(u)
 				v = f.call(f.call(v))
@@ -339,6 +374,20 @@ module Primes
 			end
 			v = rand(n-1)
 			a = 1 + rand(n-4) 
+		end
+		return nil
+	end
+
+
+	def self._pollard_pm1 (n, bound = 10**4, max_rounds = 8)
+		primes = Primes::Sieve.primes_list(bound)
+		m = 1
+		primes.each {|p| m *= p ** Math.log(bound, p).floor}
+		a = 2
+		a.upto(max_rounds) do |a|
+			x = Utils::Math::mod_exp(a, m, n) - 1
+			g = n.gcd(x)
+			return g if g != 1 and g != n
 		end
 		return nil
 	end

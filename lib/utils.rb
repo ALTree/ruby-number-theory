@@ -1,22 +1,19 @@
 
 module Utils # :nodoc: :all:
 
-	### Timing module ###
-	module Timing	
 
-		def self.time_once 
-			start = Time.now
-			yield 
-			(Time.now - start).round(6)
-		end
-
-		def self.time_avg (runs = 10, &block)
-			sum = 0
-			runs.times {sum += time_once &block}
-			(sum / runs).round(6)
-		end
-
+	def self.time_once
+		start = Time.now
+		yield 
+		(Time.now - start).round(6)
 	end
+
+	def self.time_avg (runs = 10, &block)
+		sum = 0
+		runs.times {sum += time_once &block}
+		(sum / runs).round(6)
+	end
+
 
 	### Math Utils module ###
 	module Math
