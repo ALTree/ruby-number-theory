@@ -298,7 +298,7 @@ module Primes
 					else
 						fac = self.factor(div)
 					end
-					factors.merge!(fac) {|k,v1,v2| v1+v2}
+					factors.merge!(fac) {|k,v1,v2| v1 + v2}
 					m /= div
 					return factors.merge({m => 1}) if self.prime?(m)
 				end
