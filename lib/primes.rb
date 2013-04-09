@@ -90,6 +90,7 @@ module Primes
 		@primes = [2,3,5,7,11]
 		@limit = 11
 
+
 		##
 		# Returns a list with all the prime numbers between
 		# +low+ and +high+.
@@ -158,9 +159,9 @@ module Primes
 		
 		if Sieve.get_limit <= sqrt
 			arr = Array.new(sqrt + 1, true)
-			arr[0] = false
-			arr[1] = false
-			2.upto(sqrt) do |i|
+			arr[0] = false; arr[1] = false
+			i = 2
+			while i <= sqrt do 
 				if arr[i]
 					j = i*i
 					while j <= high
@@ -168,8 +169,15 @@ module Primes
 						j += i
 					end
 				end
+				i += 1
 			end
-			arr.each_with_index {|b,i| primes_up_sqrt << i if b}
+			
+			i = 0
+			while i < arr.length do
+				primes_up_sqrt << i if arr[i]
+				i += 1
+			end
+
 			start = primes_up_sqrt.index {|n| n > low}
 			primes = primes_up_sqrt[start..-1]
 		else
@@ -178,6 +186,7 @@ module Primes
 		end
 
 		arr = Array.new(high - low + 1, true)
+
 		for p in primes_up_sqrt
 			j = p - (low-1) % p - 1
 			while j <= high
@@ -185,8 +194,13 @@ module Primes
 				j += p
 			end
 		end
-
-		arr.each_with_index {|b,i| primes << i+low if b}
+		
+		i = 0
+		while i < arr.length do
+			primes << i + low if arr[i]
+			i += 1
+		end
+		
 		return primes
 	end
 
@@ -359,7 +373,8 @@ module Primes
 	def self._pollard_rho (n, retries = 5, max_rounds = 10**5) # :nodoc:
 		v = 2
 		a = -1
-		retries.times do
+		i = 0
+		while i < retries do
 			u = v
 			f = lambda {|x| (x*x + a) % n}
 			j = 0
@@ -374,6 +389,7 @@ module Primes
 			end
 			v = rand(n-1)
 			a = 1 + rand(n-4) 
+			i += 1
 		end
 		return nil
 	end
@@ -470,6 +486,7 @@ module Primes
 		return primes.inject {|a,b| a*b}
 	end
 
+	Sieve.primes_list(1000)
 
 end
 
