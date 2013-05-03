@@ -1,3 +1,5 @@
+require 'narray'
+
 require_relative 'utils'
 require_relative 'divisors'
 
@@ -82,130 +84,38 @@ module NumberTheory
 
 
 		##
-		# Class containing a list of all prime numbers up to a 
-		# certain limit. All the methods that require such a list
-		# for a computation query the class using its accessors methods.
-		# The list is dynamically extended when needed.
+		# to provide:
 		#
-		class Sieve
+		# self.primes_list (low = 1, high) 
+		# returns all the priems between low and high
+		#
+		# self.nthprime (n)
+		#
 
-			@primes = [2,3,5,7,11]
-			@limit = 11
-
-
-			##
-			# Returns a list with all the prime numbers between
-			# +low+ and +high+.
-			#
-			# == Example
-			#
-			#  >> Primes::Sieve.primes_list(20)
-			#  => [2, 3, 5, 7, 11, 13, 17, 19]
-			#
-			#  >> Primes::Sieve.primes_list(1000, 1020)
-			#  => [1009, 1013, 1019]
-			#
-			def self.primes_list (low = 1, high)
-				low = low.to_i
-				high = high.to_i
-				if high > @limit
-					Sieve.extend(high)
-					@limit = high
-				end
-				l = @primes.index {|n| n >= low}
-				h = @primes.rindex {|n| n <= high}
-				return @primes[l..h]
-			end
-
-			##
-			# Returns the +n+-th prime number.
-			#
-			# == Example
-			#  >> Primes::Sieve.nthprime(5)
-			#  => 11
-			#
-			#  >> Primes::Sieve.nthprime(500)
-			#  => 3571
-			#
-			def self.nthprime (n)
-				if @primes[n] == nil
-					high = n*(Math.log(n) + Math.log(Math.log(n))).to_i
-					Sieve.extend(high)
-					@limit = high
-				end
-				return @primes[n-1]
-			end
-
-			##
-			# Returns the current upper limit on the primes list.
-			#
-			def self.get_limit
-				return @limit
-			end
-
-			##
-			# Extends the primes list to contain all the prime numbers up to
-			# +high+
-			#
-			def self.extend (high)
-				# @primes = @primes + Primes::primerange(@limit + 1, high)
-				@primes = @primes + Primes::_sieveprimes(@limit + 1, high)
-			end
-
-		end
-
-
-		def self._sieveprimes (low, high) # :nodoc:
-			sqrt = (high**0.5).ceil
-			primes_up_sqrt = []
-			
-			if Sieve.get_limit <= sqrt
-				arr = Array.new(sqrt + 1, true)
-				arr[0] = false; arr[1] = false
-				i = 2
-				while i <= sqrt do 
-					if arr[i]
-						j = i*i
-						while j <= high
-							arr[j] = false
-							j += i
-						end
+		def self.primes_list (low = 2, high)
+			arr = NArray.byte(high + 1, 1).fill(1)
+			arr[0], arr[1] = 0, 0
+			sq = (high**0.5).ceil
+			2.upto(sq) do |i|
+				if arr[i] == 1
+					j = i**2
+					while j <= high
+						arr[j] = 0
+						j += i
 					end
-					i += 1
-				end
-				
-				i = 0
-				while i < arr.length do
-					primes_up_sqrt << i if arr[i]
-					i += 1
-				end
-
-				start = primes_up_sqrt.index {|n| n > low}
-				primes = primes_up_sqrt[start..-1]
-			else
-				primes_up_sqrt = Sieve.primes_list(sqrt)
-				primes = []
-			end
-
-			arr = Array.new(high - low + 1, true)
-
-			for p in primes_up_sqrt
-				j = p - (low-1) % p - 1
-				while j <= high
-					arr[j] = false
-					j += p
 				end
 			end
-			
-			i = 0
-			while i < arr.length do
-				primes << i + low if arr[i]
-				i += 1
-			end
-			
-			return primes
+			primes = NArray.object(high + 1, 1).indgen!
+			ret = primes[arr].to_a
+			return ret[ret.index{|i| i >= low}..-1]
 		end
 
+
+		def self.nthprime (n)
+			return [2, 3, 5, 7, 11, 13][n-1] if n < 7
+			lim = n * (Math.log(n) + Math.log(Math.log(n)))
+			return self.primes_list(lim+1)[n-1]
+		end
 
 		##
 		# Returns the value of primepi(+n+), i.e. the number
@@ -218,7 +128,19 @@ module NumberTheory
 		#
 		def self.primepi(n)
 			return 0 if n < 2
-			return Primes::Sieve.primes_list(n).size
+			arr = NArray.byte(n + 1, 1).fill(1)
+			arr[0], arr[1] = 0, 0
+			sq = (n**0.5).ceil
+			2.upto(sq) do |i|
+				if arr[i] == 1
+					j = i**2
+					while j <= n
+						arr[j] = 0
+						j += i
+					end
+				end
+			end
+			return arr.count_true
 		end
 
 
@@ -317,7 +239,7 @@ module NumberTheory
 
 		def self._trial(n, lim) # :nodoc:
 			factors = {}
-			primes = Primes::Sieve.primes_list(lim)
+			primes = self.primes_list(lim)
 			for p in primes
 				if n % p == 0
 					t = Divisors::multiplicity(n, p)
@@ -354,7 +276,7 @@ module NumberTheory
 
 
 		def self._pollard_pm1 (n, bound = 10**4, max_rounds = 8)
-			primes = Primes::Sieve.primes_list(bound)
+			primes = self.primes_list(bound)
 			m = 1
 			primes.each {|p| m *= p ** Math.log(bound, p).floor}
 			a = 2
@@ -375,7 +297,7 @@ module NumberTheory
 		#
 		def self.nextprime (n)
 			if n < 10007
-				return Primes::Sieve.primes_list(10007).find {|x| x > n}
+				return self.primes_list(10007).find {|x| x > n}
 			else
 				p = n+1
 				p += 1 while p % 6 != 1 and p % 6 != 5
@@ -440,11 +362,10 @@ module NumberTheory
 			return [2,6,30,210,2310][n-1] if n < 7
 
 			upp = n * (Math.log(n) + Math.log(Math.log(n)))
-			primes = Sieve.primes_list(upp)[0..n-1]
+			primes = self.primes_list(upp)[0..n-1]
 			return primes.inject {|a,b| a*b}
 		end
 
-		Sieve.primes_list(1000)
 
 	end
 
