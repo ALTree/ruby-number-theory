@@ -1,6 +1,8 @@
 require 'test/unit'
 require_relative  '../lib/divisors'
 
+include NumberTheory
+
 class TestDivisors < Test::Unit::TestCase
 
 	def test_divisors

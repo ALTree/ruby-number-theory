@@ -1,6 +1,8 @@
 require 'test/unit'
 require_relative '../lib/combinatorics'
 
+include NumberTheory
+
 class TestCombinatorics < Test::Unit::TestCase
 
 	def test_binomial

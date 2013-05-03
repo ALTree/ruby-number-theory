@@ -1,15 +1,14 @@
 
-module Utils # :nodoc: :all:
+module NumberTheory # :nodoc: :all:
 
-	def self.time_once
-		start = Time.now
-		yield 
-		(Time.now - start).round(6)
-	end
+	module Utils
 
+		def self.time_once
+				start = Time.now
+				yield 
+				(Time.now - start).round(6)
+		end
 
-	### Math Utils module ###
-	module Math
 
 		def self.mod_exp (a, b, m)
 			res = 1
@@ -22,6 +21,7 @@ module Utils # :nodoc: :all:
 			end
 			return res
 		end
+
 	end
 
 end

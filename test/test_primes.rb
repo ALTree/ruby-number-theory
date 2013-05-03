@@ -1,6 +1,8 @@
 require 'test/unit'
 require_relative  '../lib/primes'
 
+include NumberTheory
+
 class TestPrimes < Test::Unit::TestCase
 
 	def test__trial_division
