@@ -44,24 +44,18 @@ module NumberTheory
 			mods30 = [1, 7, 11, 13, 17, 19, 23, 29] 
 			return false if not mods30.include?(n % 30)
 
-			i = 3
-			while i <= n**0.5
-				return false if n % i == 0
-				i += 2
-			end
+			3.step(n**0.5, 2) {|x| return false if n % x == 0}
 			return true
 		end
 
 		def self._witness (a, n) # :nodoc:
-			t = Divisors::multiplicity(n-1, 2)
-			u = (n-1)/(2**t)
+			t = Divisors::multiplicity(n - 1, 2)
+			u = (n - 1) / (2**t)
 			x1 = Utils::mod_exp(a, u, n)
 			t.times do |i|
 				x0 = x1
 				x1 = (x0 * x0) % n
-				if x1 == 1 and x0 != 1 and x0 != n-1
-					return true
-				end
+				return true if x1 == 1 and x0 != 1 and x0 != n-1
 			end
 			return true if x1 != 1
 			return false
@@ -83,15 +77,6 @@ module NumberTheory
 		end
 
 
-		##
-		# to provide:
-		#
-		# self.primes_list (low = 1, high) 
-		# returns all the priems between low and high
-		#
-		# self.nthprime (n)
-		#
-
 		def self.primes_list (low = 2, high)
 			arr = NArray.byte(high + 1, 1).fill(1)
 			arr[0], arr[1] = 0, 0
@@ -112,9 +97,9 @@ module NumberTheory
 
 
 		def self.nthprime (n)
-			return [2, 3, 5, 7, 11, 13][n-1] if n < 7
+			return [2, 3, 5, 7, 11, 13][n - 1] if n < 7
 			lim = n * (Math.log(n) + Math.log(Math.log(n)))
-			return self.primes_list(lim+1)[n-1]
+			return self.primes_list(lim + 1)[n - 1]
 		end
 
 		##
@@ -208,7 +193,7 @@ module NumberTheory
 							else
 								fac = self.factor(div)
 							end
-							factors.merge!(fac) {|k,v1,v2| v1 + v2}
+							factors.merge!(fac) {|k, v1, v2| v1 + v2}
 							m /= div
 							return factors.merge({m => 1}) if self.prime?(m)
 						end
@@ -225,7 +210,7 @@ module NumberTheory
 							else
 								fac = self.factor(div)
 							end
-							factors.merge!(fac) {|k,v1,v2| v1 + v2}
+							factors.merge!(fac) {|k, v1, v2| v1 + v2}
 							m /= div
 							return factors.merge({m => 1}) if self.prime?(m)
 						end
@@ -239,8 +224,7 @@ module NumberTheory
 
 		def self._trial(n, lim) # :nodoc:
 			factors = {}
-			primes = self.primes_list(lim)
-			for p in primes
+			for p in self.primes_list(lim)
 				if n % p == 0
 					t = Divisors::multiplicity(n, p)
 					factors[p] = t
@@ -251,25 +235,17 @@ module NumberTheory
 		end
 
 		def self._pollard_rho (n, retries = 5, max_rounds = 10**5) # :nodoc:
-			v = 2
-			a = -1
-			i = 0
-			while i < retries do
-				u = v
-				f = lambda {|x| (x*x + a) % n}
-				j = 0
-				while j < max_rounds
-					j += 1
-					u = f.call(u)
-					v = f.call(f.call(v))
+			v, a, i = 2, -1, 0
+			retries.times do
+				u, f = v, lambda {|x| (x*x + a) % n}
+				max_rounds.times do
+					u, v = f.call(u), f.call(f.call(v))
 					g = n.gcd(u - v)
 					next if g == 1
 					break if g == n
 					return g
 				end
-				v = rand(n-1)
-				a = 1 + rand(n-4) 
-				i += 1
+				v, a = rand(n - 1), 1 + rand(n - 4) 
 			end
 			return nil
 		end
@@ -277,9 +253,8 @@ module NumberTheory
 
 		def self._pollard_pm1 (n, bound = 10**4, max_rounds = 8)
 			primes = self.primes_list(bound)
-			m = 1
+			m, a = 1, 2
 			primes.each {|p| m *= p ** Math.log(bound, p).floor}
-			a = 2
 			a.upto(max_rounds) do |a|
 				x = Utils::mod_exp(a, m, n) - 1
 				g = n.gcd(x)
@@ -342,7 +317,7 @@ module NumberTheory
 		#  => 15569
 		#
 		def self.randprime(low = 1, high)
-			p = self.nextprime(low + rand(high+1))
+			p = self.nextprime(low + rand(high + 1))
 			p = self.prevprime(p) if p > high
 			return nil if p < low
 			return p
@@ -359,13 +334,11 @@ module NumberTheory
 		#
 		def self.primorial(n)
 			return nil if n < 0
-			return [2,6,30,210,2310][n-1] if n < 7
-
+			return [2, 6, 30, 210, 2310][n - 1] if n < 7
 			upp = n * (Math.log(n) + Math.log(Math.log(n)))
 			primes = self.primes_list(upp)[0..n-1]
-			return primes.inject {|a,b| a*b}
+			return primes.inject {|a, b| a * b}
 		end
-
 
 	end
 

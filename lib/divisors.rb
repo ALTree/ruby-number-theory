@@ -16,8 +16,7 @@ module NumberTheory
 		#
 		def self.multiplicity (n, d)
 			return 0 if n % d != 0
-			m = n
-			res = 0
+			m, res = n, 0
 			while m % d == 0
 				m /= d
 				res += 1
