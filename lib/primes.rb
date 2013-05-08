@@ -317,7 +317,7 @@ module NumberTheory
 		#  => 15569
 		#
 		def self.randprime(low = 1, high)
-			p = self.nextprime(low + rand(high + 1))
+			p = self.nextprime(low + rand(high - low + 1))
 			p = self.prevprime(p) if p > high
 			return nil if p < low
 			return p
