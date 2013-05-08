@@ -76,9 +76,40 @@ module NumberTheory
 			end
 		end
 
+		@primes_bit_array = nil
+		@upper_limit = 0
 
 		def self.primes_list (low = 2, high)
-			arr = NArray.byte(high + 1, 1).fill(1)
+			self._initialize_bit_array (high) if not @primes_bit_array
+			if high > @upper_limit
+				self._extend_bit_array(high)
+			end
+			primes = NArray.object(high + 1).indgen!
+			ret = primes[@primes_bit_array[0..high]].to_a
+			return ret[ret.index{|i| i >= low}..-1]
+		end
+
+		def self._extend_bit_array (high)
+			arr = NArray.byte(high + 1)
+			arr[0..@upper_limit] = @primes_bit_array[0..@upper_limit]
+			arr[@upper_limit+1..-1] = NArray.byte(high - @upper_limit).fill(1)[0..-1]
+			sq = (high**0.5).ceil
+			2.upto(sq) do |i|
+				if arr[i] == 1
+					j = i*i
+					j += i while j < @upper_limit
+					while j <= high
+						arr[j] = 0
+						j += i
+					end
+				end
+			end
+			@primes_bit_array = arr
+			@upper_limit = high
+		end
+
+		def self._initialize_bit_array  (high)
+			arr = NArray.byte(high + 1).fill(1)
 			arr[0], arr[1] = 0, 0
 			sq = (high**0.5).ceil
 			2.upto(sq) do |i|
@@ -90,9 +121,8 @@ module NumberTheory
 					end
 				end
 			end
-			primes = NArray.object(high + 1, 1).indgen!
-			ret = primes[arr].to_a
-			return ret[ret.index{|i| i >= low}..-1]
+			@primes_bit_array = arr
+			@upper_limit = high
 		end
 
 
