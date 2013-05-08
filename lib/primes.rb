@@ -96,8 +96,8 @@ module NumberTheory
 			sq = (high**0.5).ceil
 			2.upto(sq) do |i|
 				if arr[i] == 1
-					j = i*i
-					j += i while j < @upper_limit
+					n = (@upper_limit / i - 1).floor
+					j = i + n * i
 					while j <= high
 						arr[j] = 0
 						j += i
