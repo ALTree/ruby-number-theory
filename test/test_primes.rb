@@ -39,8 +39,8 @@ class TestPrimes < Test::Unit::TestCase
 	def test_primes_list
 		assert_equal(Primes::primes_list(10), [2, 3, 5, 7])
 		assert_equal(Primes::primes_list(10, 30), [11, 13, 17, 19, 23, 29])
-		assert_equal(Primes::primes_list(1000,10000).size, 1229 - 168)
-		assert_equal(Primes::primes_list(100000).size, 9592)
+		assert_equal(Primes::primes_list(10**3,10**4).size, 1229 - 168)
+		assert_equal(Primes::primes_list(10**5).size, 9592)
 	end
 
 	def test_primepi

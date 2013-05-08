@@ -76,6 +76,7 @@ module NumberTheory
 			end
 		end
 
+
 		@primes_bit_array = nil
 		@upper_limit = 0
 
@@ -90,14 +91,15 @@ module NumberTheory
 		end
 
 		def self._extend_bit_array (high)
+
 			arr = NArray.byte(high + 1)
 			arr[0..@upper_limit] = @primes_bit_array[0..@upper_limit]
 			arr[@upper_limit+1..-1] = NArray.byte(high - @upper_limit).fill(1)[0..-1]
 			sq = (high**0.5).ceil
 			2.upto(sq) do |i|
 				if arr[i] == 1
-					n = (@upper_limit / i - 1).floor
-					j = i + n * i
+					j = i*i
+					j += i while j < @upper_limit
 					while j <= high
 						arr[j] = 0
 						j += i
@@ -128,7 +130,7 @@ module NumberTheory
 
 		def self.nthprime (n)
 			return [2, 3, 5, 7, 11, 13][n - 1] if n < 7
-			lim = n * (Math.log(n) + Math.log(Math.log(n)))
+			lim = n * (Math.log(n) + Math.log(Math.log(n))).to_i
 			return self.primes_list(lim + 1)[n - 1]
 		end
 
@@ -143,19 +145,7 @@ module NumberTheory
 		#
 		def self.primepi(n)
 			return 0 if n < 2
-			arr = NArray.byte(n + 1, 1).fill(1)
-			arr[0], arr[1] = 0, 0
-			sq = (n**0.5).ceil
-			2.upto(sq) do |i|
-				if arr[i] == 1
-					j = i**2
-					while j <= n
-						arr[j] = 0
-						j += i
-					end
-				end
-			end
-			return arr.count_true
+			return self.primes_list(n).size
 		end
 
 
