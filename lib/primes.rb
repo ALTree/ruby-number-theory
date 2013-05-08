@@ -444,8 +444,6 @@ module NumberTheory
 			return primes.inject {|a,b| a*b}
 		end
 
-		Sieve.primes_list(1000)
-
 	end
 
 end
