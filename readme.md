@@ -52,6 +52,10 @@ Follows a (nearly) complete list of the methods provided by the library.
 >> Primes::prime?(173)
   => true
 ```
+```ruby
+>> Primes::prime?(416064700201658306196320137931)
+  => true
+```
 
 * Lists of primes:
 ```ruby
@@ -119,7 +123,7 @@ Follows a (nearly) complete list of the methods provided by the library.
 
 ### Divisors
 
-* Factors multipliticy
+* Factors multiplicity
 ```ruby
 # Returns the greatest k such that
 # 2^k divides 1200
