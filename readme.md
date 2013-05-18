@@ -34,6 +34,15 @@ The library consist of three main modules:
 
 All of them are incapsulated into the main **NumberTheory** module, wich provide namespaces separation.
 
+A minimal working script, solving [problem 3](http://projecteuler.net/problem=3) of the nice [Project Euler](http://projecteuler.net/).
+
+```ruby
+require 'number-theory'
+include NumberTheory
+
+puts Primes::factor(600851475143).keys.max   # 6857 
+```
+
 Follows a (nearly) complete list of the methods provided by the library.
 
 ### Primes
