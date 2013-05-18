@@ -9,13 +9,19 @@ Obtaining
 ---------
 
 The library is available as a gem
-    $ sudo gem install number-theory
+```
+sudo gem install number-theory
+```
 
 You can also clone it with git
-    $ git clone git://github.com/
+```
+git clone git://github.com/
+```
 
 You will need to install the NArray gem, since number-theory requires it:
-    $ sudo gem install narray
+```
+sudo gem install narray
+```
 
 Usage
 -----
