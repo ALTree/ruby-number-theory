@@ -9,8 +9,8 @@ simple as possible.
 Obtaining
 ---------
 
-The library will be soon made available as a gem
-  $ sudo gem install ..
+The library is available as a gem
+  $ sudo gem number-theory
 
 You can also clone it with git
   $ git clone git://github.com/
@@ -167,6 +167,10 @@ Contributing
 
 RubyNumberTheory is in **ALPHA STATUS**.
 
+
+Run Tests
+---------
+TODO
 
 
 License
