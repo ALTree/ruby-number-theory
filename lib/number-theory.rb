@@ -7,8 +7,8 @@ module NumberTheory
 	end
 
 	# Load modules
-	require File.dirname(__FILE__) + '/lib/primes.rb'
-	require File.dirname(__FILE__) + '/lib/divisors.rb'
-	require File.dirname(__FILE__) + '/lib/utils.rb'
+	require File.dirname(__FILE__) + '/number-theory/primes.rb'
+	require File.dirname(__FILE__) + '/number-theory/divisors.rb'
+	require File.dirname(__FILE__) + '/number-theory/utils.rb'
 
 end
