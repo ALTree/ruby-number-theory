@@ -3,6 +3,13 @@ module NumberTheory
 
 	module Combinatorics
 
+		##
+		# Returns the binomial number bin(n, k)
+		#
+		# == Example
+		#  >> Combinatorics::binomial(100, 10)
+		#  => 17310309456440
+		#
 		def self.binomial (n, k)
 			return 0 if k < 0 or k > n
 			k = n - k if k > n - k
@@ -12,10 +19,31 @@ module NumberTheory
 			return res
 		end
 
+		##
+		# Returns n!, the factorial of n
+		#
+		# == Example
+		#  >> Combinatorics::factorial(10)
+		#  => 3628800
+		#
 		def self.factorial (n)
 			return (1..n).inject(:*)
 		end
 
+		##
+		# Return p(n), the number of possible partitions of 
+		# the natural number n, which is the number of 
+		# distinct ways of representing n as a sum of 
+		# natural numbers.
+		#
+		# == Example
+		#  >> Combinatorics::partition_number(48)
+		#  => 147273
+		#
+		# == Algorithm
+		#
+		#
+		#
 		def self.partition_number (n)
 			arr = Array.new(n+1, 1)
 			gpn = self._compute_gpn(n)
@@ -37,6 +65,10 @@ module NumberTheory
 			return arr[n]
 		end
 
+		## helper method for partition_number,
+		## computes the generalized pentagonal
+		## numbers needed for the computation
+		## of p(n)
 		def self._compute_gpn (lim)
 			gpn = []
 			m = 1

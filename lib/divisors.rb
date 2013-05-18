@@ -6,11 +6,10 @@ module NumberTheory
 	module Divisors
 
 		##
-		# Returns the greatest integer +k+ such that
-		# <tt>d^k</tt> divides +n+.
+		# Returns the greatest integer k such that
+		# d^k divides n.
 		#
 		# == Example
-		#
 		#  >> Divisors::multiplicity(1000,5)
 		#  => 3
 		#
@@ -25,10 +24,9 @@ module NumberTheory
 		end
 
 		##
-		# Returns the ordered list of the divisors of +n+ (1 and +n+ included).
+		# Returns the ordered list of the divisors of n (1 and n included).
 		#
 		# == Example
-		#
 		#  >> Divisors::divisors(100)
 		#  => [1, 2, 4, 5, 10, 20, 25, 50, 100]
 		#
@@ -38,9 +36,7 @@ module NumberTheory
 			return self._divisors(0, factors, ps).sort!.uniq
 		end
 
-		##
-		# Helper function for divisors()
-		#
+		## Helper function for divisors
 		def self._divisors (n = 0, factors, ps) # :nodoc:
 			give = []
 			if n == ps.size
@@ -58,10 +54,9 @@ module NumberTheory
 		end
 
 		##
-		# Return sigma_0(+n+), i.e. the number of divisors of +n+.
+		# Return sigma_0(n), i.e. the number of divisors of n.
 		#
 		# == Example
-		#
 		#  >> Divisors::divcount(100)
 		#  => 9
 		#
@@ -74,11 +69,10 @@ module NumberTheory
 		end
 
 		##
-		# Return sigma_k(+n+), i.e. the sum of the +k+-th powers of 
-		# the divisors of +n+.
+		# Return sigma_k(n), i.e. the sum of the k-th powers of 
+		# the divisors of n.
 		#
 		# == Example
-		#
 		#  >> Divisors::divisor_sigma(10, 2)
 		#  => 130
 		#
@@ -92,10 +86,9 @@ module NumberTheory
 		end
 
 		##
-		# Returns true if +n+ is a perfect number, false otherwise.
+		# Returns true if n is a perfect number, false otherwise.
 		#
 		# == Example
-		#
 		#  >> Divisors::perfect?(6)
 		#  => true
 		#
@@ -105,11 +98,10 @@ module NumberTheory
 
 
 		##
-		# Returns the valuer of phi(+n+), the Euler phi function; i.e.
-		# the number of integers in [1..n] comprime to +n+. 
+		# Returns the valuer of phi(n), the Euler phi function; i.e.
+		# the number of integers in [1..n] comprime to n. 
 		#
 		# == Example
-		#
 		#  >> Divisors::euler_phi(30)
 		#  => 8
 		#
@@ -117,10 +109,9 @@ module NumberTheory
 		#  => 36
 		#
 		# == Algorithm
-		#
-		# +n+ is first factored, then the result is computed as
-		# <tt> n * prod_{p} (1 - 1/p) </tt>
-		# where the product spans over all the prime factors of +n+
+		# n is first factored, then the result is computed as
+		# n * prod_{p} (1 - 1/p)
+		# where the product spans over all the prime factors of n
 		#
 		def self.euler_phi (n)
 			return 0 if n < 1
@@ -131,7 +122,6 @@ module NumberTheory
 			end
 			return res
 		end	
-
 
 	end
 

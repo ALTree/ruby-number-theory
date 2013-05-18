@@ -7,9 +7,9 @@ module NumberTheory
 
 	module Primes
 
-		##
-		# Returns true if +n+ is (probably) prime, false otherwise.
-		# For +n+ < 10^15 the answer is accurate; greater n values
+		## 
+		# Returns true if n is (probably) prime, false otherwise.
+		# For n < 10^15 the answer is accurate; greater n values
 		# reported as primes have a (very) small probability of
 		# actually being pseudoprimes.
 		#
@@ -21,11 +21,11 @@ module NumberTheory
 		#  => true
 		#
 		# == Algorithm
-		# For +n+ < 10^9 the function just test +n+ by trial division;
+		# For n < 10^9 the function just test by trial division;
 		# for greater n values it performs a Miller-Rabin a
 		# pseudoprime test. 
 		#
-		# If +n+ < 341550071728321 the test is deterministic, otherwise
+		# If n < 341550071728321 the test is deterministic, otherwise
 		# there's a probability smaller than 7 x 10^-31 that a composite
 		# number is reported as prime.
 		#
@@ -37,7 +37,8 @@ module NumberTheory
 			end
 		end
 
-		def self._trial_division (n) # :nodoc:
+		## helper method for prime?
+		def self._trial_division (n) 
 			return false if n < 2 or n == 4
 			return true if n == 2 or n == 3 or n == 5
 
@@ -48,19 +49,7 @@ module NumberTheory
 			return true
 		end
 
-		def self._witness (a, n) # :nodoc:
-			t = Divisors::multiplicity(n - 1, 2)
-			u = (n - 1) / (2**t)
-			x1 = Utils::mod_exp(a, u, n)
-			t.times do |i|
-				x0 = x1
-				x1 = (x0 * x0) % n
-				return true if x1 == 1 and x0 != 1 and x0 != n-1
-			end
-			return true if x1 != 1
-			return false
-		end
-		  
+		## helper method for prime?
 		def self._miller_rabin (n, runs = 50) # :nodoc:
 			if n < 341550071728321
 				for a in [2, 3, 5, 7, 11, 13, 17] do
@@ -76,11 +65,44 @@ module NumberTheory
 			end
 		end
 
-
+		## helper method for _miller_rabin
+		def self._witness (a, n) 
+			t = Divisors::multiplicity(n - 1, 2)
+			u = (n - 1) / (2**t)
+			x1 = Utils::mod_exp(a, u, n)
+			t.times do |i|
+				x0 = x1
+				x1 = (x0 * x0) % n
+				return true if x1 == 1 and x0 != 1 and x0 != n-1
+			end
+			return true if x1 != 1
+			return false
+		end
+		  
+		##
+		# Memoized list of primes.
+		#
+		# primes_list returns a list of the prime numbers
+		# between low and high (extremes included). 
+		#
+		# The computation is memoized in @primes_bit_array,
+		# @upper_limit is the current highest prime in the list.
+	    # Later requests are serverd either by using the memoized
+	    # list, or extending it (if high > @upper_limit)
+		# 
+		# == Example
+		#  >> Primes::primes_list(30)
+		#  => [2, 3, 5, 7, 11, 13, 17, 19, 23, 29]
+		#
+		# == Algorithm
+		# Primes are computed using a plain version of the Sieve 
+		# of Eratosthenes; the method uses the bit-array structure
+		# implemented in the NArray gem
+		#
 		@primes_bit_array = nil
 		@upper_limit = 0
 
-		def self.primes_list (low = 2, high)
+		def self.primes_list (low = 2, high)	
 			self._initialize_bit_array (high) if not @primes_bit_array
 			if high > @upper_limit
 				self._extend_bit_array(high)
@@ -90,8 +112,8 @@ module NumberTheory
 			return ret[ret.index{|i| i >= low}..-1]
 		end
 
+		## extend the memoized bit array up to high
 		def self._extend_bit_array (high)
-
 			arr = NArray.byte(high + 1)
 			arr[0..@upper_limit] = @primes_bit_array[0..@upper_limit]
 			arr[@upper_limit+1..-1] = NArray.byte(high - @upper_limit).fill(1)[0..-1]
@@ -110,6 +132,7 @@ module NumberTheory
 			@upper_limit = high
 		end
 
+		## for the first computation of the bit array
 		def self._initialize_bit_array  (high)
 			arr = NArray.byte(high + 1).fill(1)
 			arr[0], arr[1] = 0, 0
@@ -127,7 +150,19 @@ module NumberTheory
 			@upper_limit = high
 		end
 
-
+		##
+		# Returns the nth prime number.
+		#
+		# == Example
+		#  >> Primes::nthprime(10**4)
+		#  => 104729
+		#
+		# == Algorithm
+		# Since it can be proved that the nth prime number is 
+		# not greater than n * (log n + log log n)
+		# the method returns the nth element of 
+		# primes_list(n * (log n + log log n))
+		#
 		def self.nthprime (n)
 			return [2, 3, 5, 7, 11, 13][n - 1] if n < 7
 			lim = n * (Math.log(n) + Math.log(Math.log(n))).to_i
@@ -135,11 +170,10 @@ module NumberTheory
 		end
 
 		##
-		# Returns the value of primepi(+n+), i.e. the number
-		# of primes smaller than +n+
+		# Returns the value of primepi(n), i.e. the number
+		# of primes smaller than n
 		#
 		# == Example
-		#
 		#  >> Primes::primepi(100000)
 		#  => 9592
 		#
@@ -150,14 +184,13 @@ module NumberTheory
 
 
 		##
-		# Factors +n+ and returns an hash containing the prime
-		# factors of +n+ as keys and their respective multiplicities
-		# as values. If +limit+ is passed, no factors greater
-		# than +limit+ are searched, and some of the keys could be
+		# Factors n and returns an hash containing the prime
+		# factors of n as keys and their respective multiplicities
+		# as values. If limit is passed, no factors greater
+		# than limit are searched, and some of the keys could be
 		# composite.
 		#
 		# == Example
-		#
 		#  >> Primes::factor(1690)
 		#  => {2=>1, 5=>1, 13=>2}
 		#
@@ -168,11 +201,10 @@ module NumberTheory
 		#  => {3267000013=>1, 4093082899=>1, 5915587277=>1}
 		#
 		# == Algorithm
-		#
-		# The procedure first searches for small factors of +n+
-		# in the primes list provided by the +Sieve+ class 
-		# Then, if needed, the procedure switches to Pollard's Rho method
-		# and searches for other factors until +n+ is fully factorized.
+		# The procedure first searches for small factors of n
+		# in the primes list provided by the primes_list method.
+		# Then, if needed, the procedure switches between Pollard's Rho method
+		# and Pollard's p - 1 method until n is fully factored.
 		#
 		def self.factor(n, opts = {})
 			defaults = {:limit => nil, :use_rho => true, :use_pm1 => true}
@@ -191,7 +223,7 @@ module NumberTheory
 				return factors if m == 1
 				return factors.merge({m => 1})
 			else
-				factors, m = self._trial(n, 4096)
+				factors, m = self._trial(n, 100000)
 				return factors if m == 1
 				return factors.merge({m => 1}) if self.prime?(m)
 
@@ -204,9 +236,8 @@ module NumberTheory
 
 					## pollard rho
 					if use_rho
-						retries = count * 2
-						rounds = [10**4, 10**count].max
-						div = self._pollard_rho(m, retries, rounds)
+						rounds = [10**3, 10**count].max
+						div = self._pollard_rho(m, rounds)
 						if div
 							if self.prime?(div)
 								fac = {div => 1}
@@ -221,9 +252,8 @@ module NumberTheory
 
 					## pollard p - 1
 					if use_pm1
-						bound = [10**4, 10**count].max
-						max_rounds = [6, count*2].max
-						div = self._pollard_pm1(m, bound, max_rounds)
+						bound = [10**3, 10**count].max
+						div = self._pollard_pm1(m, bound)
 						if div
 							if self.prime?(div)
 								fac = {div => 1}
@@ -242,7 +272,8 @@ module NumberTheory
 			end
 		end
 
-		def self._trial(n, lim) # :nodoc:
+		## search for small factor of n (upto lim)
+		def self._trial(n, lim) 
 			factors = {}
 			for p in self.primes_list(lim)
 				if n % p == 0
@@ -254,7 +285,8 @@ module NumberTheory
 			return factors, n
 		end
 
-		def self._pollard_rho (n, retries = 5, max_rounds = 10**5) # :nodoc:
+		## Pollard's rho method
+		def self._pollard_rho (n, max_rounds, retries = 5) 
 			v, a, i = 2, -1, 0
 			retries.times do
 				u, f = v, lambda {|x| (x*x + a) % n}
@@ -270,31 +302,37 @@ module NumberTheory
 			return nil
 		end
 
-
-		def self._pollard_pm1 (n, bound = 10**4, max_rounds = 8)
+		## Pollard's p - 1 method
+		def self._pollard_pm1 (n, bound, max_rounds = 8)
 			primes = self.primes_list(bound)
-			m, a = 1, 2
-			primes.each {|p| m *= p ** Math.log(bound, p).floor}
-			a.upto(max_rounds) do |a|
-				x = Utils::mod_exp(a, m, n) - 1
-				g = n.gcd(x)
+			max_rounds.times do
+				c = 2
+				primes.each do |p|
+					Math.log(bound, p).floor.times {c = Utils::mod_exp(c, p, n)}
+				end
+				g = n.gcd(c-1)
 				return g if g != 1 and g != n
 			end
 			return nil
 		end
 
 		##
-		# Returns the smallest prime number greater than +n+.
+		# Returns the smallest prime number greater than n.
 		#
 		# == Example
 		#  >> Primes::nextprime(1000)
 		#  => 1009
 		#
+		# == Algorithm
+		# Starting from n, tests primality for each successive number
+		# equals to 1 or 5 (mod 6). Return the first prime
+		# found.
+		#
 		def self.nextprime (n)
 			if n < 10007
 				return self.primes_list(10007).find {|x| x > n}
 			else
-				p = n+1
+				p = n + 1
 				p += 1 while p % 6 != 1 and p % 6 != 5
 				flip = (p % 6 == 1 ? 4 : 2)
 				while not self.prime?(p)
@@ -312,6 +350,10 @@ module NumberTheory
 		#  >> Primes::prevprime(1000)
 		#  => 997
 		#
+		# == Algorithm
+		# Starting from n, tests primality for each previous number
+		# equals to 1 or 5 (mod 6). Return the first prime
+		# found.
 		def self.prevprime (n)
 			return nil if n < 3
 			p = n-1
@@ -325,11 +367,10 @@ module NumberTheory
 		end
 
 		##
-		# Returns a random prime between +low+ and +high+;
-		# and +nil+ if there's not one.
+		# Returns a random prime between low and high;
+		# and nil if there's not one.
 		#
 		# == Example
-		#
 		#  >> Primes::randprime(1000)
 		#  => 631
 		#
@@ -344,11 +385,10 @@ module NumberTheory
 		end
 
 		##
-		# Return the primorial of +n+, i.e. the product
-		# of the first +n+ prime numbers.
+		# Returns the primorial of n, i.e. the product
+		# of the first n prime numbers.
 		#
 		# == Example
-		#
 		#  >> Primes::primorial(10)
 		#  => 6469693230
 		#

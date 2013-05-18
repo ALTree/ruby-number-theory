@@ -9,6 +9,17 @@ module NumberTheory # :nodoc: :all:
 
 	module Utils
 
+		## 
+		# Returns a^b (mod m). Negative exponents are allowed.
+		#
+		# == Example
+		#  >> Utils::mod_exp(12, 34, 107)
+		#  => 61
+		#
+		# == Algorithm
+		#
+		#
+		#
 		def self.mod_exp (a, b, m)
 			if b >= 0
 				res = 1
@@ -23,12 +34,26 @@ module NumberTheory # :nodoc: :all:
 			end
 		end
 
+		##
+		# Return the modular inverse of a, i.e. the number b
+		# such that a * b = 1 (mod m)
+		#
+		# == Example
+		#  >> Utils::mod_inv(121, 107)
+		#  => 23
+		#
+		# == Algorithm
+		#
+		#
+		#
+		#
 		def self.mod_inv (a, m)
 			return 0 if a % m == 0
 			g, a, y = self._eca(a, m) 
 			return g != 1 ? 0 : a % m
 		end
 
+		## helper function for mod_inv
 		def self._eca (a, b)
 			return b, 0, 1 if a == 0
 			g, y, x = self._eca(b % a, a)
