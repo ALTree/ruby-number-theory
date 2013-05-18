@@ -8,7 +8,7 @@ It aims to be easy to use (and possibly fast), while keeping its code as simple 
 Obtaining
 ---------
 
-The library is available as a gem
+The library is available as a [gem](https://rubygems.org/gems/number-theory)
 ```
 sudo gem install number-theory
 ```

@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
 
   s.name         = 'number-theory'
-  s.version      = '0.0.1'
+  s.version      = '0.0.2'
   s.summary      = "A Ruby Number Theory Library"
   s.description  = "A number theory library written in pure Ruby. Provides methods for primality test, factoring integers, and more."
   
