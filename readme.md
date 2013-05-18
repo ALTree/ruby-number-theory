@@ -168,7 +168,7 @@ Follows a (nearly) complete list of the methods provided by the library.
 
 * Modular inverse
 ```ruby
-# Returns the modular inverse of 137 (mod 120),
+# Returns the modular inverse of 120 (mod 107),
 >> Utils::mod_inv(120, 107)
 => 33 # because 120 * 33 == 1 (mod 107)
 ```
