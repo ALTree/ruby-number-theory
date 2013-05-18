@@ -69,7 +69,7 @@ module NumberTheory
 		end
 
 		##
-		# Return sigma_k(n), i.e. the sum of the k-th powers of 
+		# Returns sigma_k(n), i.e. the sum of the k-th powers of 
 		# the divisors of n.
 		#
 		# == Example
