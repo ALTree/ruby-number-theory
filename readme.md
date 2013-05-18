@@ -9,13 +9,13 @@ Obtaining
 ---------
 
 The library is available as a gem
-  $ sudo gem install number-theory
+    $ sudo gem install number-theory
 
 You can also clone it with git
-  $ git clone git://github.com/
+    $ git clone git://github.com/
 
 You will need to install the NArray gem, since number-theory requires it:
-  $ sudo gem install narray
+    $ sudo gem install narray
 
 Usage
 -----
@@ -152,7 +152,6 @@ Follows a (nearly) complete list of the methods provided by the library.
 # Returns 1777^1855 (mod 10^12)
 >> Utils::mod_exp(1777, 1855, 10**12)
   => 630447576593
-
 # Negative exponents allowed
 >> Utils::mod_exp(13, -17, 1000)
   => 597
@@ -161,7 +160,7 @@ Follows a (nearly) complete list of the methods provided by the library.
 Contributing
 ------------
 
-RubyNumberTheory is in **ALPHA STATUS**.
+RubyNumberTheory is in **ALPHA STATUS**. Contributions are welcome.
 
 
 Run Tests
