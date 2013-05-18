@@ -16,6 +16,6 @@ Gem::Specification.new do |s|
 	s.test_files   = Dir['test/**/*.rb']
 	s.add_dependency("narray", [">=0.6"])
 
-  s.homepage     = 'http://rubygems.org/gems/example'
+  s.homepage     = 'https://github.com/ALTree/ruby-number-theory'
 
 end
