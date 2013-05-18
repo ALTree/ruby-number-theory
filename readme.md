@@ -3,18 +3,19 @@ RubyNumberTheory
 
 A number theory library written in pure Ruby. 
 
-It aims to be easy to use (and possibly fast), while keeping its code as
-simple as possible.
+It aims to be easy to use (and possibly fast), while keeping its code as simple as possible.
 
 Obtaining
 ---------
 
 The library is available as a gem
-  $ sudo gem number-theory
+  $ sudo gem install number-theory
 
 You can also clone it with git
   $ git clone git://github.com/
 
+You will need to install the NArray gem, since number-theory requires it:
+  $ sudo gem install narray
 
 Usage
 -----
@@ -25,8 +26,7 @@ The library consist of three main modules:
 * **Divisors**: with methods related to integer division
 * **Utils**: for various utility methods
 
-All of them are incapsulated into the main **NumberTheory** module, wich 
-provide namespaces separation.
+All of them are incapsulated into the main **NumberTheory** module, wich provide namespaces separation.
 
 Follows a (nearly) complete list of the methods provided by the library.
 
