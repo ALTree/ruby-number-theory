@@ -1,5 +1,6 @@
 require 'test/unit'
-require_relative '../lib/utils'
+require File.expand_path(File.join(File.dirname(__FILE__), '..', 'number-theory'))
+
 
 include NumberTheory
 

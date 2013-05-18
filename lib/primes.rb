@@ -1,8 +1,3 @@
-require 'narray'
-
-require_relative 'utils'
-require_relative 'divisors'
-
 module NumberTheory
 
 	module Primes

@@ -1,5 +1,4 @@
-
-module NumberTheory # :nodoc: :all:
+module NumberTheory 
 
 	def self.time_once
 		start = Time.now
@@ -35,7 +34,7 @@ module NumberTheory # :nodoc: :all:
 		end
 
 		##
-		# Return the modular inverse of a, i.e. the number b
+		# Returns the modular inverse of a, i.e. the number b
 		# such that a * b = 1 (mod m)
 		#
 		# == Example
