@@ -142,8 +142,7 @@ Follows a (nearly) complete list of the methods provided by the library.
 
 * Sigma divisor function
 ```ruby
-# Returns sigma_k(n); the sum of the k-th 
-# powers of the divisors of n.
+# Returns sigma_k(n); the sum of the k-th powers of the divisors of n.
 >> Divisors::divisor_sigma(60, 2)
 => 5460
 ```
@@ -167,7 +166,7 @@ Follows a (nearly) complete list of the methods provided by the library.
 ```ruby
 # Returns the modular inverse of 137 (mod 120),
 >> Utils::mod_inv(120, 107)
-=> 33 # because 120 * 33 == 0 (mod 107)
+=> 33 # because 120 * 33 == 1 (mod 107)
 ```
 
 * Modular exponentiation
@@ -175,6 +174,8 @@ Follows a (nearly) complete list of the methods provided by the library.
 # Returns 1777^1855 (mod 10^12)
 >> Utils::mod_exp(1777, 1855, 10**12)
 => 630447576593
+```
+```ruby
 # Negative exponents allowed
 >> Utils::mod_exp(13, -17, 1000)
 => 597
