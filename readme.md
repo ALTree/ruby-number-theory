@@ -15,7 +15,7 @@ sudo gem install number-theory
 
 You can also clone it with git
 ```
-git clone git://github.com/
+git clone https://github.com/ALTree/ruby-number-theory.git
 ```
 
 You will need to install the NArray gem, since number-theory requires it:
@@ -57,7 +57,7 @@ Follows a (nearly) complete list of the methods provided by the library.
   => true
 ```
 
-* Lists of primes:
+* List of primes
 ```ruby
 # Under 30
 >> Primes::primes_list(30)
@@ -125,8 +125,7 @@ Follows a (nearly) complete list of the methods provided by the library.
 
 * Factors multiplicity
 ```ruby
-# Returns the greatest k such that
-# 2^k divides 1200
+# Returns the greatest k such that 2^k divides 1200
 >> Divisors::multiplicity(1200, 2)
 => 4
 ```
@@ -185,20 +184,37 @@ Follows a (nearly) complete list of the methods provided by the library.
 => 597
 ```
 
+Tests
+---------
+
+All the methods implemented in the library came with unit tests. 
+
+One can run all the tests using *rake*. In the main directory of the library:
+
+    rake test:run
+
+This command will run all the tests in the *test* directory of the library.
+
+
 Contributing
 ------------
 
-RubyNumberTheory is in **ALPHA STATUS**. Contributions are welcome.
+RubyNumberTheory is in **ALPHA STATUS**. Contributions are welcome!
 
+Here's some ideas (maybe also a roadmap for possible future versions of the library):
 
-Run Tests
----------
-TODO: how to
+* **Extend / modify the factorization method to make it faster.** Currently implemented: trial division + Pollard's rho + Pollard's p-1, 
+Lenstra's elliptic curve factorization method would be very nice.
 
+* **Extend the Divisors Module**. Squares and square-free recognition, Legendre symbol, Jacobi symbol, Mobius function..
+
+* **A Combinatorics Module**. Generator for partitions, permutations, ..
+
+* **A Congruence Module**. Congruences solver, Chinese Remainder Theorem, ..
 
 License
 ------------
 
-RubyNumberTheory is released under GNU General Public Licens (see LICENSE)
+RubyNumberTheory is released under GNU General Public Licens (see LICENSE).
 
 
