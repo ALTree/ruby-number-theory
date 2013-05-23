@@ -13,7 +13,7 @@ module NumberTheory
     #  >> Divisors::multiplicity(1000,5)
     #  => 3
     #
-    def self.multiplicity (n, d)
+    def self.multiplicity(n, d)
       return 0 if n % d != 0
       m, res = n, 0
       while m % d == 0
@@ -30,14 +30,14 @@ module NumberTheory
     #  >> Divisors::divisors(100)
     #  => [1, 2, 4, 5, 10, 20, 25, 50, 100]
     #
-    def self.divisors (n)
+    def self.divisors(n)
       factors = Primes::factor(n)
       ps = factors.keys.sort!
       return self._divisors(0, factors, ps).sort!.uniq
     end
 
     ## Helper function for divisors
-    def self._divisors (n = 0, factors, ps) # :nodoc:
+    def self._divisors(n = 0, factors, ps) # :nodoc:
       give = []
       if n == ps.size
         give << 1
@@ -60,7 +60,7 @@ module NumberTheory
     #  >> Divisors::divcount(100)
     #  => 9
     #
-    def self.divcount (n)
+    def self.divcount(n)
       return nil if n < 0
       return 1 if n == 1
       divcount = 1
@@ -76,7 +76,7 @@ module NumberTheory
     #  >> Divisors::divisor_sigma(10, 2)
     #  => 130
     #
-    def self.divisor_sigma (n, k)
+    def self.divisor_sigma(n, k)
       return self.divcount(n) if k == 0
       res = 0
       for i in self.divisors(n)
@@ -113,7 +113,7 @@ module NumberTheory
     # n * prod_{p} (1 - 1/p)
     # where the product spans over all the prime factors of n
     #
-    def self.euler_phi (n)
+    def self.euler_phi(n)
       return 0 if n < 1
       res = n
       Primes::factor(n).keys.each do |i|
