@@ -123,6 +123,27 @@ module NumberTheory
       return res
     end 
 
+ ##
+    # Returns true if a positive integer is square free;
+    # returns false otherwise
+    #
+    # A positive integer 'n' is said to be square free
+    # if no prime factor appears more than once
+    # in the list of prime factors for 'n'
+    #
+    # == Example
+    #  >> Primes::square_free?(10)
+    #  => true
+    #
+    # The integer 1 is a special case since it is 
+    # both a prefect square, and square free.
+    # 
+    def self.square_free?(n)
+      return false if n <= 0
+      (Primes::factor(n)).each_value { |value| return false if value >= 2 }
+      return true
+    end
+    
   end
 
 end
