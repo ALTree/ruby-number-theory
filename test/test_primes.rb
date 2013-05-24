@@ -81,4 +81,15 @@ class TestPrimes < Test::Unit::TestCase
     assert_equal(Primes::primorial(25), 2305567963945518424753102147331756070)
   end
 
+  def test_square_free
+    assert(Primes::square_free?(1))
+    assert(Primes::square_free?(110))
+    assert(Primes::square_free?(3226340895))
+    assert(Primes::square_free?(3226340897))
+    assert_false(Primes::square_free?(3226340896))
+    assert_false Primes::square_free?(18)
+    assert_false(Primes::square_free?(0))
+    assert_false(Primes::square_free?(-110))
+  end
+
 end

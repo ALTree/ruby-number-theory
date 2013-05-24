@@ -19,7 +19,7 @@ module NumberTheory
     #
     #
     #
-    def self.mod_exp (a, b, m)
+    def self.mod_exp(a, b, m)
       if b >= 0
         res = 1
         while b > 0
@@ -46,14 +46,14 @@ module NumberTheory
     #
     #
     #
-    def self.mod_inv (a, m)
+    def self.mod_inv(a, m)
       return 0 if a % m == 0
       g, a, y = self._eca(a, m) 
       return g != 1 ? 0 : a % m
     end
 
     ## helper function for mod_inv
-    def self._eca (a, b)
+    def self._eca(a, b)
       return b, 0, 1 if a == 0
       g, y, x = self._eca(b % a, a)
           return g, x - y * (b / a).floor, y

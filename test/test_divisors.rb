@@ -43,6 +43,16 @@ class TestDivisors < Test::Unit::TestCase
     assert(Divisors::perfect?(2305843008139952128))
   end
 
+def test_square_free?
+    assert(Divisors::square_free?(1))
+    assert(Divisors::square_free?(110))
+    assert(Divisors::square_free?(3226340895))
+    assert(Divisors::square_free?(3226340897))
+    assert_false(Divisors::square_free?(3226340896))
+    assert_false Divisors::square_free?(18)
+    assert_false(Divisors::square_free?(0))
+    assert_false(Divisors::square_free?(-110))
+  end
 
 
 end

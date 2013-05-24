@@ -24,7 +24,7 @@ module NumberTheory
     # there's a probability smaller than 7 x 10^-31 that a composite
     # number is reported as prime.
     #
-    def self.prime? (n)
+    def self.prime?(n)
       if n < 10**9 or n % 2 == 0
         return self._trial_division(n)
       else
@@ -33,7 +33,7 @@ module NumberTheory
     end
 
     ## helper method for prime?
-    def self._trial_division (n) 
+    def self._trial_division(n) 
       return false if n < 2 or n == 4
       return true if n == 2 or n == 3 or n == 5
 
@@ -45,7 +45,7 @@ module NumberTheory
     end
 
     ## helper method for prime?
-    def self._miller_rabin (n, runs = 50) # :nodoc:
+    def self._miller_rabin(n, runs = 50) # :nodoc:
       if n < 341550071728321
         for a in [2, 3, 5, 7, 11, 13, 17] do
           return false if self._witness(a, n)
@@ -61,7 +61,7 @@ module NumberTheory
     end
 
     ## helper method for _miller_rabin
-    def self._witness (a, n) 
+    def self._witness(a, n) 
       t = Divisors::multiplicity(n - 1, 2)
       u = (n - 1) / (2**t)
       x1 = Utils::mod_exp(a, u, n)
@@ -97,8 +97,8 @@ module NumberTheory
     @primes_bit_array = nil
     @upper_limit = 0
 
-    def self.primes_list (low = 2, high)  
-      self._initialize_bit_array (high) if not @primes_bit_array
+    def self.primes_list(low = 2, high)  
+      self._initialize_bit_array(high) if not @primes_bit_array
       if high > @upper_limit
         self._extend_bit_array(high)
       end
@@ -108,7 +108,7 @@ module NumberTheory
     end
 
     ## extend the memoized bit array up to high
-    def self._extend_bit_array (high)
+    def self._extend_bit_array(high)
       arr = NArray.byte(high + 1)
       arr[0..@upper_limit] = @primes_bit_array[0..@upper_limit]
       arr[@upper_limit+1..-1] = NArray.byte(high - @upper_limit).fill(1)[0..-1]
@@ -158,7 +158,7 @@ module NumberTheory
     # the method returns the nth element of 
     # primes_list(n * (log n + log log n))
     #
-    def self.nthprime (n)
+    def self.nthprime(n)
       return [2, 3, 5, 7, 11, 13][n - 1] if n < 7
       lim = n * (Math.log(n) + Math.log(Math.log(n))).to_i
       return self.primes_list(lim + 1)[n - 1]
@@ -281,7 +281,7 @@ module NumberTheory
     end
 
     ## Pollard's rho method
-    def self._pollard_rho (n, max_rounds, retries = 5) 
+    def self._pollard_rho(n, max_rounds, retries = 5) 
       v, a, i = 2, -1, 0
       retries.times do
         u, f = v, lambda {|x| (x*x + a) % n}
@@ -323,7 +323,7 @@ module NumberTheory
     # equals to 1 or 5 (mod 6). Return the first prime
     # found.
     #
-    def self.nextprime (n)
+    def self.nextprime(n)
       if n < 10007
         return self.primes_list(10007).find {|x| x > n}
       else
@@ -349,7 +349,7 @@ module NumberTheory
     # Starting from n, tests primality for each previous number
     # equals to 1 or 5 (mod 6). Return the first prime
     # found.
-    def self.prevprime (n)
+    def self.prevprime(n)
       return nil if n < 3
       p = n-1
       p -= 1 while p % 6 != 1 and p % 6 != 5
@@ -393,6 +393,27 @@ module NumberTheory
       upp = n * (Math.log(n) + Math.log(Math.log(n)))
       primes = self.primes_list(upp)[0..n-1]
       return primes.inject {|a, b| a * b}
+    end
+
+    ##
+    # Returns true if a positive integer is square free;
+    # returns false otherwise
+    #
+    # A positive integer 'n' is said to be square free
+    # if no prime factor appears more than once
+    # in the list of prime factors for 'n'
+    #
+    # == Example
+    #  >> Primes::square_free?(10)
+    #  => true
+    #
+    # The integer 1 is a special case since it is 
+    # both a prefect square, and square free.
+    # 
+    def self.square_free?(n)
+      return false if n <= 0
+      (self.factor(n)).each_value { |value| return false if value >= 2 }
+      return true
     end
 
   end
