@@ -10,7 +10,7 @@ module NumberTheory
     # d^k divides n.
     #
     # == Example
-    #  >> Divisors::multiplicity(1000,5)
+    #  >> Divisors.multiplicity(1000,5)
     #  => 3
     #
     def self.multiplicity(n, d)
@@ -20,20 +20,20 @@ module NumberTheory
         m /= d
         res += 1
       end
-      return res
+      res
     end
 
     ##
     # Returns the ordered list of the divisors of n (1 and n included).
     #
     # == Example
-    #  >> Divisors::divisors(100)
+    #  >> Divisors.divisors(100)
     #  => [1, 2, 4, 5, 10, 20, 25, 50, 100]
     #
     def self.divisors(n)
-      factors = Primes::factor(n)
+      factors = Primes.factor(n)
       ps = factors.keys.sort!
-      return self._divisors(0, factors, ps).sort!.uniq
+      self._divisors(0, factors, ps).sort!.uniq
     end
 
     ## Helper function for divisors
@@ -50,22 +50,22 @@ module NumberTheory
           end
         end
       end
-      return give
+      give
     end
 
     ##
     # Return sigma_0(n), i.e. the number of divisors of n.
     #
     # == Example
-    #  >> Divisors::divcount(100)
+    #  >> Divisors.divcount(100)
     #  => 9
     #
     def self.divcount(n)
       return nil if n < 0
       return 1 if n == 1
       divcount = 1
-      Primes::factor(n).values.each {|n| divcount *= (n+1)}
-      return divcount
+      Primes.factor(n).values.each {|n| divcount *= (n+1)}
+      divcount
     end
 
     ##
@@ -73,7 +73,7 @@ module NumberTheory
     # the divisors of n.
     #
     # == Example
-    #  >> Divisors::divisor_sigma(10, 2)
+    #  >> Divisors.divisor_sigma(10, 2)
     #  => 130
     #
     def self.divisor_sigma(n, k)
@@ -82,18 +82,18 @@ module NumberTheory
       for i in self.divisors(n)
         res += i**k
       end
-      return res
+      res
     end
 
     ##
     # Returns true if n is a perfect number, false otherwise.
     #
     # == Example
-    #  >> Divisors::perfect?(6)
+    #  >> Divisors.perfect?(6)
     #  => true
     #
     def self.perfect? (n)
-      return self.divisor_sigma(n, 1) == 2*n
+      self.divisor_sigma(n, 1) == 2*n
     end
 
 
@@ -102,10 +102,10 @@ module NumberTheory
     # the number of integers in [1..n] comprime to n. 
     #
     # == Example
-    #  >> Divisors::euler_phi(30)
+    #  >> Divisors.euler_phi(30)
     #  => 8
     #
-    #  >> Divisors::euler_phi(37)
+    #  >> Divisors.euler_phi(37)
     #  => 36
     #
     # == Algorithm
@@ -116,11 +116,11 @@ module NumberTheory
     def self.euler_phi(n)
       return 0 if n < 1
       res = n
-      Primes::factor(n).keys.each do |i|
+      Primes.factor(n).keys.each do |i|
         res *= i - 1
         res /= i
       end
-      return res
+      res
     end 
 
  ##
@@ -132,7 +132,7 @@ module NumberTheory
     # in the list of prime factors for 'n'
     #
     # == Example
-    #  >> Primes::square_free?(10)
+    #  >> Primes.square_free?(10)
     #  => true
     #
     # The integer 1 is a special case since it is 
@@ -140,8 +140,8 @@ module NumberTheory
     # 
     def self.square_free?(n)
       return false if n <= 0
-      (Primes::factor(n)).each_value { |value| return false if value >= 2 }
-      return true
+      (Primes.factor(n)).each_value { |value| return false if value >= 2 }
+      true
     end
     
   end

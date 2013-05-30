@@ -12,7 +12,7 @@ module NumberTheory
     # Returns a^b (mod m). Negative exponents are allowed.
     #
     # == Example
-    #  >> Utils::mod_exp(12, 34, 107)
+    #  >> Utils.mod_exp(12, 34, 107)
     #  => 61
     #
     # == Algorithm
@@ -27,9 +27,9 @@ module NumberTheory
           b >>= 1
           a = (a * a) % m
         end
-        return res
+        res
       else
-        return self.mod_exp(self.mod_inv(a, m), -b, m)
+        self.mod_exp(self.mod_inv(a, m), -b, m)
       end
     end
 
@@ -38,7 +38,7 @@ module NumberTheory
     # such that a * b = 1 (mod m)
     #
     # == Example
-    #  >> Utils::mod_inv(121, 107)
+    #  >> Utils.mod_inv(121, 107)
     #  => 23
     #
     # == Algorithm
@@ -56,7 +56,7 @@ module NumberTheory
     def self._eca(a, b)
       return b, 0, 1 if a == 0
       g, y, x = self._eca(b % a, a)
-          return g, x - y * (b / a).floor, y
+      return g, x - y * (b / a).floor, y
     end
 
 
