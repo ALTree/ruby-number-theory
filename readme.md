@@ -1,6 +1,10 @@
 RubyNumberTheory
 ================
 
+NB (2017-01-01): **This library is no longer maintained here**. 
+
+[The gem ownership on rubygems.org was transferred to another developer]
+
 A number theory library written in pure Ruby. 
 
 It aims to be easy to use (and possibly fast), while keeping its code as simple as possible.
@@ -203,22 +207,6 @@ One can run all the tests using *rake*. In the main directory of the library:
 
 This command will run all the tests in the *test* directory of the library.
 
-
-Contributing
-------------
-
-RubyNumberTheory is in **ALPHA STATUS**. Contributions are welcome!
-
-Here's some ideas (maybe also a roadmap for possible future versions of the library):
-
-* **Extend / modify the factorization method to make it faster.** Currently implemented: trial division + Pollard's rho + Pollard's p-1, 
-Lenstra's elliptic curve factorization method would be very nice.
-
-* **Extend the Divisors Module**. Squares and square-free recognition, Legendre symbol, Jacobi symbol, Mobius function..
-
-* **A Combinatorics Module**. Generator for partitions, permutations, ..
-
-* **A Congruence Module**. Congruences solver, Chinese Remainder Theorem, ..
 
 License
 ------------
